@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;900&family=Tajawal:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #6B2D8A;
+  --primary-dark: #4E1F66;
+  --primary-light: #8B4DAB;
+  --gold: #D4AF37;
+  --gold-light: #E3C867;
+  --gold-dark: #A8871F;
+  --sky: #DDE8F3;
+  --sky-light: #EEF4FA;
+  --cream: #FFFDF8;
+  --surface: #FFFFFF;
+  --surface-dim: #F7F3FA;
+  --text: #2D1B3D;
+  --text-muted: #6B5A7A;
+  --border: #E8DFF0;
+  --success: #10B981;
+  --danger: #EF4444;
+  --warning: #F59E0B;
+  --whatsapp: #25D366;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  direction: rtl;
+  scroll-behavior: smooth;
+  font-size: 17px;
+}
+
+body {
+  font-family: 'Tajawal', 'Cairo', system-ui, sans-serif;
+  background-color: var(--cream);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-dim);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Selection */
+::selection {
+  background-color: #C9A5DD;
+  color: var(--primary-dark);
+}
+
+/* Swiper — Hero Banner Slider */
+.hero-swiper {
+  height: 100%;
+}
+
+.hero-swiper .swiper-pagination {
+  bottom: 20px;
+  z-index: 20;
+}
+
+.hero-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  transition: all 0.3s ease;
+  border-radius: 9999px;
+}
+
+.hero-swiper .swiper-pagination-bullet-active {
+  width: 28px;
+  background: #D4AF37;
+  border-radius: 9999px;
+}
+
+/* Swiper — Banner Slider (legacy) */
+.banner-swiper .swiper-pagination {
+  bottom: 14px;
+}
+
+.banner-swiper .swiper-pagination-bullet {
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+  transition: all 0.3s ease;
+  border-radius: 9999px;
+}
+
+.banner-swiper .swiper-pagination-bullet-active {
+  width: 22px;
+  background: #D4AF37;
+  border-radius: 9999px;
+}
+
+/* Swiper — Product carousel */
+.product-swiper .swiper-pagination-bullet {
+  background: var(--primary);
+  opacity: 0.4;
+}
+
+.product-swiper .swiper-pagination-bullet-active {
+  background: var(--primary);
+  opacity: 1;
+}
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Hide number arrows */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.4s ease-out both;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.25s ease-out both;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>Elite & More — Design Pack</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="styles.jsx"></script>
+<script type="text/babel" src="chrome.jsx"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="screens-home.jsx"></script>
+<script type="text/babel" src="screens-browse.jsx"></script>
+<script type="text/babel" src="screens-checkout.jsx"></script>
+<script type="text/babel" src="screens-admin.jsx"></script>
+<script type="text/babel" src="screens-mobile.jsx"></script>
+
+<script type="text/babel">
+function App() {
+  return (
+    <DesignCanvas>
+      {/* ── Brand Intro ─────────────────────────────────────────── */}
+      <DCSection x={0} y={0} title="Elite & More — نظام التصميم" subtitle="متجر سوري إلكتروني متعدد البرندات · RTL · ليرة + دولار · شام كاش">
+        <DCPostIt x={0} y={0} w={420}>
+          <strong>الفكرة العامة</strong><br/>
+          • هوية بنفسجية ذهبية فاخرة (من شعار الفراشة)<br/>
+          • عربي أولاً، والدولار للعرض فقط<br/>
+          • لا سجل مستخدمين — الطلب عبر واتساب وشام كاش<br/>
+          • الأدمن يتحكم بكل شيء: برندات، تصنيفات، صور، أسعار، شارات
+        </DCPostIt>
+        <DCPostIt x={440} y={0} w={380} tone="purple">
+          <strong>الشاشات المغطاة</strong><br/>
+          1 — الواجهة (7 أقسام)<br/>
+          2 — المتجر مع الفلاتر<br/>
+          3 — صفحة برند<br/>
+          4 — تفاصيل منتج<br/>
+          5 — السلة + الدفع + تأكيد<br/>
+          6 — المفضلة + من نحن<br/>
+          7 — لوحة تحكم (6 شاشات)<br/>
+          8 — نسختين للموبايل
+        </DCPostIt>
+        <DCPostIt x={840} y={0} w={360} tone="gold">
+          <strong>الخطوة التالية</strong><br/>
+          راجع التصاميم مع الفريق، وحدد:<br/>
+          • البرندات النهائية (شعارات + ألوان)<br/>
+          • المحافظات المفعّلة<br/>
+          • نصوص "من نحن" و"الشحن"<br/>
+          • رقم الواتساب وحساب شام كاش<br/>
+          • سعر الصرف الابتدائي
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── CUSTOMER — DESKTOP ──────────────────────────────────── */}
+      <DCSection x={0} y={360} title="01 · واجهة المتجر (ويب)" subtitle="الصفحات التي يراها الزبون">
+        <DCArtboard x={0} y={0} w={1440} label="الصفحة الرئيسية" index="01.1"><HomepageScreen /></DCArtboard>
+        <DCArtboard x={1540} y={0} w={1440} label="المتجر / التصفح مع الفلاتر" index="01.2"><ShopScreen /></DCArtboard>
+        <DCArtboard x={3080} y={0} w={1440} label="صفحة برند (NUK Clean)" index="01.3"><BrandPageScreen /></DCArtboard>
+      </DCSection>
+
+      <DCSection x={0} y={3200} title="02 · تدفق الشراء" subtitle="من المنتج إلى تأكيد الطلب">
+        <DCArtboard x={0} y={0} w={1440} label="تفاصيل منتج" index="02.1"><ProductDetailScreen /></DCArtboard>
+        <DCArtboard x={1540} y={0} w={1440} label="السلة" index="02.2"><CartScreen /></DCArtboard>
+        <DCArtboard x={3080} y={0} w={1440} label="الدفع (شام كاش + واتساب)" index="02.3"><CheckoutScreen /></DCArtboard>
+      </DCSection>
+
+      <DCSection x={0} y={6400} title="03 · صفحات مساندة" subtitle="المفضلة ومن نحن">
+        <DCArtboard x={0} y={0} w={1440} label="المفضلة" index="03.1"><FavoritesScreen /></DCArtboard>
+        <DCArtboard x={1540} y={0} w={1440} label="من نحن" index="03.2"><AboutScreen /></DCArtboard>
+      </DCSection>
+
+      {/* ── ADMIN ───────────────────────────────────────────────── */}
+      <DCSection x={0} y={9200} title="04 · لوحة التحكم (الأدمن)" subtitle="6 شاشات — وصول خاص للمدراء">
+        <DCArtboard x={0} y={0} w={1440} h={900} label="تسجيل دخول المدير" index="04.1"><AdminLoginScreen /></DCArtboard>
+        <DCArtboard x={1540} y={0} w={1440} label="الرئيسية (Dashboard)" index="04.2"><AdminDashScreen /></DCArtboard>
+        <DCArtboard x={3080} y={0} w={1440} label="إدارة البرندات" index="04.3"><AdminBrandsScreen /></DCArtboard>
+      </DCSection>
+
+      <DCSection x={0} y={12400} title="05 · CRUD المنتجات والمحتوى" subtitle="الاستمارات التفصيلية">
+        <DCArtboard x={0} y={0} w={1440} label="إضافة/تعديل منتج" index="05.1"><AdminProductFormScreen /></DCArtboard>
+        <DCArtboard x={1540} y={0} w={1440} label="إدارة سلايدر الصور (Banners)" index="05.2"><AdminBannersScreen /></DCArtboard>
+        <DCArtboard x={3080} y={0} w={1440} label="الإعدادات العامة" index="05.3"><AdminSettingsScreen /></DCArtboard>
+      </DCSection>
+
+      {/* ── MOBILE ──────────────────────────────────────────────── */}
+      <DCSection x={0} y={15600} title="06 · الموبايل (Responsive)" subtitle="معاينة لنسختي الهوم + المنتج">
+        <DCArtboard x={0} y={0} w={420} h={860} label="الرئيسية — موبايل" index="06.1"><MobileHomeScreen /></DCArtboard>
+        <DCArtboard x={500} y={0} w={420} h={860} label="تفاصيل منتج — موبايل" index="06.2"><MobileProductScreen /></DCArtboard>
+        <DCPostIt x={1000} y={0} w={380}>
+          <strong>ملاحظات الموبايل</strong><br/>
+          • شريط تنقل سفلي ثابت (4 تبويبات)<br/>
+          • زر واتساب عائم<br/>
+          • CTA ثابت في صفحة المنتج<br/>
+          • كل الشاشات تعاد بنفس النمط (grid → قائمة، فلاتر → bottom sheet)
+        </DCPostIt>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
