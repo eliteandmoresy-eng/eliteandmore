@@ -145,6 +145,7 @@ export interface CartItem {
   price_syp: number;
   quantity: number;
   variant_label?: string;
+  governorate?: string;
 }
 
 export interface CheckoutFormData {

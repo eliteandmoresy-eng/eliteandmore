@@ -19,6 +19,16 @@ export const useCartStore = create<CartState>()(
 
       addItem: (newItem) => {
         const id = `${newItem.product_id}_${newItem.variant_id || 'base'}`;
+        const items = get().items;
+        
+        // Find if there's an existing governorate in the cart
+        // Products without specific governorate restriction (governorate: undefined) are compatible with any
+        const existingGovItem = items.find((i) => i.governorate);
+        
+        if (existingGovItem && newItem.governorate && existingGovItem.governorate !== newItem.governorate) {
+          throw new Error(`MISMATCH: ${existingGovItem.governorate}`);
+        }
+
         set((state) => {
           const existing = state.items.find((i) => i.id === id);
           if (existing) {

@@ -1,5 +1,5 @@
 'use client';
-import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
+import { ShoppingCart, Trash2, Plus, Minus, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
@@ -109,6 +109,14 @@ export default function CartPage() {
                     <p className="font-tajawal text-sm font-bold text-elite-text">
                       {formatSYP(item.price_syp)}
                     </p>
+                    {item.governorate && (
+                      <div className="flex items-center gap-1 mt-1.5 bg-primary/5 px-2 py-0.5 rounded-lg w-fit">
+                        <MapPin className="w-3 h-3 text-primary" />
+                        <span className="font-tajawal text-[10px] font-black text-primary">
+                          المحافظة: {item.governorate}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Controls */}

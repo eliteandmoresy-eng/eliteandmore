@@ -11,41 +11,25 @@ export default function CreativeBackground({ density = "high" }: { density?: "lo
 
   const shapes = useMemo(() => {
     const s = [];
-    const rows = density === "high" ? 28 : 10; // high density for home, lower for other pages
+    const rows = density === "high" ? 18 : 7;
     for (let i = 0; i < rows; i++) {
-        const yPos = `${(i / (rows - 1)) * 96}%`;
-        const isEven = i % 2 === 0;
-        const isThird = i % 3 === 0;
-        
-        // Zig-Zag Logic for both Mobile & Desktop
-        // 0: Left, 1: Right, 2: Mid-Left, 3: Mid-Right
-        let xPos = "-5%"; 
-        if (i % 4 === 1) xPos = "65%";
-        if (i % 4 === 2) xPos = "20%";
-        if (i % 4 === 3) xPos = "45%";
+      const yPos = `${(i / (rows - 1)) * 96}%`;
+      const isThird = i % 3 === 0;
 
-        s.push({
-            x: xPos,
-            y: yPos,
-            color: isEven ? "text-gold" : "text-primary",
-            rot: isEven ? 15 : -15,
-            op: density === "high" ? (isThird ? 0.25 : 0.18) : 0.12, // reduce opacity too
-            duration: 18 + (i % 12),
-            scale: density === "high" ? 1 : 0.7 // smaller on other pages
-        });
+      let xPos = "-5%";
+      if (i % 4 === 1) xPos = "72%";
+      if (i % 4 === 2) xPos = "25%";
+      if (i % 4 === 3) xPos = "50%";
 
-        // Occasional giant background wings (center) - only in high density or fewer in low
-        if (density === "high" && i % 7 === 0) {
-            s.push({
-                x: "30%",
-                y: yPos,
-                color: isEven ? "text-primary" : "text-gold",
-                rot: 0,
-                op: 0.05,
-                duration: 40,
-                scale: 1.2
-            });
-        }
+      s.push({
+        x: xPos,
+        y: yPos,
+        rot: i % 2 === 0 ? 8 : -12,
+        op: density === "high" ? (isThird ? 0.28 : 0.18) : 0.12,
+        duration: 20 + (i % 10),
+        scale: density === "high" ? 1 : 0.7,
+        flip: i % 3 === 0,
+      });
     }
     return s;
   }, [density]);
@@ -55,48 +39,44 @@ export default function CreativeBackground({ density = "high" }: { density?: "lo
   return (
     <div className="absolute inset-0 pointer-events-none z-[0] overflow-hidden select-none">
       {shapes.map((s, i) => (
-        <EliteShape 
+        <EliteButterfly
           key={i}
-          x={s.x} 
-          y={s.y} 
-          rotate={s.rot} 
-          opacity={s.op} 
-          color={s.color} 
+          x={s.x}
+          y={s.y}
+          rotate={s.rot}
+          opacity={s.op}
           duration={s.duration}
           scale={s.scale}
+          flip={s.flip}
         />
       ))}
     </div>
   );
 }
 
-function EliteShape({ x, y, duration, rotate, opacity, color, scale = 1 }: { 
-  x: string, y: string, duration: number, rotate: number, opacity: number, color: string, scale?: number
+function EliteButterfly({ x, y, duration, rotate, opacity, scale = 1, flip = false }: {
+  x: string; y: string; duration: number; rotate: number; opacity: number; scale?: number; flip?: boolean;
 }) {
   return (
     <motion.div
-      initial={{ left: x, top: y, opacity: opacity, rotate, scale }}
-      animate={{ 
-        y: [0, -40, 0],
-        rotate: [rotate, rotate + 8, rotate]
+      initial={{ left: x, top: y, opacity, rotate, scale: flip ? -scale : scale }}
+      animate={{
+        y: [0, -35, 0],
+        rotate: [rotate, rotate + 6, rotate],
       }}
-      transition={{
-        duration,
-        repeat: Infinity,
-        ease: "linear"
-      }}
+      transition={{ duration, repeat: Infinity, ease: "linear" }}
       className="absolute will-change-transform"
-      style={{ 
-        width: 'max(150px, 28vw)',
-        maxWidth: '500px',
-        aspectRatio: '1/1'
+      style={{
+        width: 'max(160px, 26vw)',
+        maxWidth: '460px',
+        aspectRatio: '1/1',
+        backgroundImage: "url('/images/butterfly.png')",
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        transform: flip ? 'scaleX(-1)' : undefined,
+        filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.08))',
       }}
-    >
-      <svg viewBox="0 0 100 100" fill="currentColor" className={`${color} w-full h-full filter drop-shadow-sm`}>
-        <path d="M50 40 C30 10 0 20 5 50 C10 80 40 60 50 55 C45 70 30 85 20 80 C10 75 40 90 50 60" className="opacity-80" />
-        <path d="M50 40 C70 10 100 20 95 50 C90 80 60 60 50 55 C55 70 70 85 80 80 C90 75 60 90 50 60" className="opacity-70" />
-        <path d="M50 40 L48 60 L52 60 Z" className="opacity-95" />
-      </svg>
-    </motion.div>
+    />
   );
 }

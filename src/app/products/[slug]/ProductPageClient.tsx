@@ -1,9 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { MessageCircle, Plus, Minus, ShoppingCart, Shield, Truck, RotateCcw, ChevronLeft, ArrowRight } from 'lucide-react';
+import { MessageCircle, Plus, Minus, ShoppingCart, Shield, Truck, RotateCcw, ChevronLeft, ArrowRight, MapPin, ChevronDown } from 'lucide-react';
 import { Product, ProductVariant } from '@/types';
 import { getPrimaryImage, formatSYP } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
@@ -27,8 +27,29 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [showAvailability, setShowAvailability] = useState(true);
+  const [allGovs, setAllGovs] = useState<{id: string, name: string}[]>([]);
+  const [selectedGov, setSelectedGov] = useState<string | null>(null);
   const addItem = useCartStore((s) => s.addItem);
+  const cartItems = useCartStore((s) => s.items);
   const { settings } = useSettings();
+
+  // Fetch all governorates if product has no specific restrictions
+  useEffect(() => {
+    fetch('/api/governorates')
+      .then(res => res.json())
+      .then(json => {
+        if (json.data) setAllGovs(json.data);
+      });
+  }, []);
+
+  // Pre-select governorate from cart if available
+  useEffect(() => {
+    const existingGov = cartItems.find(i => i.governorate)?.governorate;
+    if (existingGov && !selectedGov) {
+      setSelectedGov(existingGov);
+    }
+  }, [cartItems]);
 
   const inStock = product.stock_status === 'in_stock';
   const imageUrl = getPrimaryImage(product.images);
@@ -45,25 +66,53 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
       ? Math.round((1 - product.sale_price_syp / product.price_syp) * 100)
       : 0;
 
+  // Process governorates availability
+  const productGovs = product.governorates || [];
+  const restrictedGovs = productGovs.length > 0;
+  
+  const availableGovs = restrictedGovs 
+    ? productGovs.filter(g => g.is_available).map(g => g.governorate?.name).filter(Boolean) as string[]
+    : allGovs.map(g => g.name); // If no restrictions, all are available
+
+  const unavailableGovs = restrictedGovs
+    ? productGovs.filter(g => !g.is_available).map(g => g.governorate?.name).filter(Boolean) as string[]
+    : [];
+
   const handleAddToCart = () => {
     if (!inStock) return;
-    addItem({
-      product_id: product.id,
-      product_slug: product.slug,
-      variant_id: selectedVariantId ?? undefined,
-      name: product.name,
-      brand_name: product.brand?.name ?? '',
-      brand_slug: product.brand?.slug ?? '',
-      image: imageUrl,
-      price_syp: effectivePrice,
-      quantity,
-      variant_label: selectedVariant?.name ?? undefined,
-    });
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
+    if (!selectedGov) {
+      setShowAvailability(true);
+      return;
+    }
+    try {
+      addItem({
+        product_id: product.id,
+        product_slug: product.slug,
+        variant_id: selectedVariantId ?? undefined,
+        name: product.name,
+        brand_name: product.brand?.name ?? '',
+        brand_slug: product.brand?.slug ?? '',
+        image: imageUrl,
+        price_syp: effectivePrice,
+        quantity,
+        variant_label: selectedVariant?.name ?? undefined,
+        governorate: selectedGov || undefined,
+      });
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2000);
+    } catch (e: any) {
+      if (e.message.startsWith('MISMATCH:')) {
+        const currentGov = e.message.split(': ')[1];
+        alert(`تنبيه: السلة تحتوي بالفعل على منتجات لمحافظة ${currentGov}. يرجى إتمام الطلب أو إفراغ السلة قبل إضافة منتجات لمحافظة أخرى.`);
+      }
+    }
   };
 
   const handleWhatsAppOrder = () => {
+    if (!selectedGov) {
+      setShowAvailability(true);
+      return;
+    }
     const subtotal = effectivePrice * quantity;
     const message = buildOrderMessage({
       items: [{
@@ -81,7 +130,7 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
       }],
       form: {
         full_name: '', phone: '', governorate_id: '',
-        governorate_name: 'غير محدد', address: '', notes: '', payment_method: 'cod',
+        governorate_name: selectedGov || 'غير محدد', address: '', notes: '', payment_method: 'cod',
       },
       subtotal, shippingCost: 0, total: subtotal,
       exchangeRate: settings.exchange_rate_syp ?? 15000,
@@ -101,38 +150,34 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
 
   return (
     <div className="min-h-screen bg-white md:bg-cream pb-32 md:pb-12">
-      
-      {/* Breadcrumb - Special back button for desktop */}
-      <div className="hidden sm:block bg-white border-b border-elite-border mb-2">
-        <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between">
-          <Breadcrumbs items={breadcrumbs} />
+
+      {/* Header Area - Breadcrumbs + Back Button (Desktop Only) */}
+      <div className="hidden md:block bg-white border-b border-elite-border/50 shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
           <button 
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-xs font-tajawal font-bold text-elite-muted hover:text-primary transition-colors bg-surface-dim px-4 py-1.5 rounded-full"
+            className="flex items-center gap-2 px-4 py-2 bg-surface-dim/50 border border-elite-border/50 rounded-xl hover:bg-white hover:border-primary/30 hover:scale-105 active:scale-95 transition-all group"
           >
-            <span>رجوع</span>
-            <ArrowRight className="w-4 h-4" />
+            <span className="text-xs font-tajawal font-black text-elite-text group-hover:text-primary transition-colors">رجوع</span>
+            <ArrowRight className="w-4 h-4 text-elite-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
           </button>
+          <div className="h-6 w-px bg-elite-border/20 mx-2" />
+          <Breadcrumbs items={breadcrumbs} />
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto md:px-4 md:py-8">
+      <div className="max-w-7xl mx-auto px-4 pt-6 pb-8 md:py-8">
 
         {/* Main layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 md:gap-10">
 
-          {/* ── GALLERY (First on Mobile) ── */}
-          <div className="bg-white p-0 md:rounded-3xl overflow-hidden relative">
-            {/* Mobile Back Button - Floating */}
-            <button 
-              onClick={() => router.back()}
-              className="md:hidden absolute top-4 right-4 z-20 w-11 h-11 bg-white/70 backdrop-blur-md border border-white/50 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all text-elite-text"
-            >
-              <ArrowRight className="w-6 h-6" />
-            </button>
+          {/* ── GALLERY ── */}
+          <div className="relative">
+
+            <div className="bg-white p-0 md:rounded-3xl overflow-hidden relative border border-elite-border/30">
             <div className="md:sticky md:top-24">
               <ProductGallery images={product.images ?? []} productName={product.name} />
-              
+
               {/* Desktop-only Category info */}
               {product.category && (
                 <div className="hidden md:flex mt-4 items-center gap-2">
@@ -144,10 +189,11 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
               )}
             </div>
           </div>
+        </div>
 
           {/* ── INFO ── */}
           <div className="flex flex-col px-4 pt-6 md:pt-0 gap-6">
-            
+
             {/* Header: Brand + Title + Tags */}
             <div className="space-y-3">
               {product.brand && (
@@ -189,7 +235,7 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
                   )}
                 </div>
                 {product.sale_enabled && discountPct > 0 && (
-                   <span className="text-[10px] font-tajawal font-bold text-red-500">خصم {discountPct}% لفترة محدودة</span>
+                  <span className="text-[10px] font-tajawal font-bold text-red-500">خصم {discountPct}% لفترة محدودة</span>
                 )}
               </div>
 
@@ -246,6 +292,64 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
                   </button>
                 </div>
               </div>
+
+              {/* Governorate Availability Section */}
+              <div className="pt-4 border-t border-elite-border/10">
+                <button
+                  onClick={() => setShowAvailability(!showAvailability)}
+                  className="w-full flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-lg bg-primary/5 text-primary">
+                      <MapPin className="w-4 h-4" />
+                    </div>
+                    <span className="font-cairo font-black text-sm text-elite-text">المحافظات المتاحة</span>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-elite-muted transition-transform duration-300 ${showAvailability ? 'rotate-180' : ''}`} />
+                </button>
+
+                {showAvailability && (
+                  <div className="mt-4 grid grid-cols-1 gap-4 animate-in fade-in slide-in-from-top-2">
+                    {availableGovs.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-tajawal font-black text-green-600 uppercase tracking-wider">اختر المحافظة (متوفر):</p>
+                        <div className="flex flex-wrap gap-2">
+                          {availableGovs.map(name => (
+                            <button
+                              key={name}
+                              onClick={() => setSelectedGov(name)}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-tajawal font-bold border transition-all ${
+                                selectedGov === name
+                                  ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-200'
+                                  : 'bg-green-50 text-green-700 border-green-100 hover:bg-green-100'
+                              }`}
+                            >
+                              {name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {unavailableGovs.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-tajawal font-black text-red-500 uppercase tracking-wider">غير متوفر في:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {unavailableGovs.map(name => (
+                            <span key={name} className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-tajawal font-bold border border-red-100 opacity-70 cursor-not-allowed">
+                              {name}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {availableGovs.length === 0 && unavailableGovs.length === 0 && (
+                      <p className="text-xs font-tajawal text-elite-muted italic text-center py-2">
+                        متوفر للشحن لكافة المحافظات
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Desktop Actions */}
@@ -253,8 +357,9 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
               <Button
                 variant="gold" size="lg" full disabled={!inStock} onClick={handleAddToCart}
                 icon={<ShoppingCart className="w-5 h-5" />}
+                className={!selectedGov ? 'opacity-50' : ''}
               >
-                {addedToCart ? '✓ تمت الإضافة' : 'أضف للسلة'}
+                {addedToCart ? '✓ تمت الإضافة' : (!selectedGov ? 'اختر المحافظة أولاً' : 'أضف للسلة')}
               </Button>
               <Button
                 variant="primary" size="lg" full disabled={!inStock} onClick={handleWhatsAppOrder}
@@ -304,17 +409,17 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
       <div className="md:hidden fixed bottom-[72px] inset-x-0 bg-white/80 backdrop-blur-xl border-t border-elite-border/50 p-4 z-[90] shadow-[0_-10px_25px_rgba(0,0,0,0.05)] animate-fade-in-up">
         <div className="flex gap-3 max-w-lg mx-auto">
           <div className="flex-1">
-             <Button
-                variant="gold" size="lg" full disabled={!inStock} onClick={handleAddToCart}
-                className="h-14 rounded-2xl font-black text-sm shadow-lg shadow-gold/20"
-              >
-                {addedToCart ? '✓ تم' : (
-                  <div className="flex items-center justify-center gap-2">
-                    <ShoppingCart className="w-5 h-5" />
-                    <span>أضف للسلة</span>
-                  </div>
-                )}
-              </Button>
+            <Button
+              variant="gold" size="lg" full disabled={!inStock} onClick={handleAddToCart}
+              className={`h-14 rounded-2xl font-black text-sm shadow-lg shadow-gold/20 ${!selectedGov ? 'opacity-60' : ''}`}
+            >
+              {addedToCart ? '✓ تم' : (
+                <div className="flex items-center justify-center gap-2">
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>{!selectedGov ? 'اختر المحافظة أولاً' : 'أضف للسلة'}</span>
+                </div>
+              )}
+            </Button>
           </div>
           <button
             onClick={handleWhatsAppOrder}
