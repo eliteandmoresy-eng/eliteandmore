@@ -74,7 +74,7 @@ export default function Header() {
     <>
       {/* ── Full-screen mobile search overlay ── */}
       {searchOpen && (
-        <div className="fixed inset-0 z-[60] bg-primary flex flex-col md:hidden">
+        <div className="fixed inset-0 z-[110] bg-primary flex flex-col md:hidden">
           <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10">
             <form onSubmit={handleSearch} className="flex-1 relative">
               <input
@@ -102,7 +102,7 @@ export default function Header() {
         </div>
       )}
 
-      <header className="sticky top-0 z-40 bg-primary border-b border-white/10 shadow-xl">
+      <header className="sticky top-0 z-[100] bg-primary border-b border-white/10 shadow-xl">
         <div className="max-w-7xl mx-auto px-3 md:px-6">
           <div className="flex items-center h-[64px] md:h-[76px] justify-between relative px-2">
             

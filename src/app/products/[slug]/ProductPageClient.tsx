@@ -152,7 +152,7 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
     <div className="min-h-screen bg-white md:bg-cream pb-32 md:pb-12">
 
       {/* Header Area - Breadcrumbs + Back Button (Desktop Only) */}
-      <div className="hidden md:block bg-white border-b border-elite-border/50 shadow-sm sticky top-0 z-50">
+      <div className="hidden md:block bg-white border-b border-elite-border/50 shadow-sm sticky top-[76px] z-30">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
           <button 
             onClick={() => router.back()}

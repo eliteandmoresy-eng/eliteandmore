@@ -15,7 +15,7 @@ export default function FloatingWhatsApp() {
   const waLink = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}`;
 
   return (
-    <div className="fixed bottom-24 md:bottom-6 left-6 z-50">
+    <div className="fixed bottom-24 md:bottom-6 left-6 z-[130]">
       {/* Tooltip */}
       {hovered && (
         <div className="absolute bottom-full left-0 mb-2 whitespace-nowrap bg-white text-elite-text text-sm font-tajawal font-semibold px-3 py-1.5 rounded-xl shadow-card border border-elite-border animate-fade-in">

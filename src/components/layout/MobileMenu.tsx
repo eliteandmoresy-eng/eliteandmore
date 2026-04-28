@@ -31,7 +31,7 @@ export default function MobileMenu({ open, onClose, brands }: MobileMenuProps) {
     href === '/' ? pathname === href : pathname.startsWith(href);
 
   return (
-    <div className="fixed inset-0 z-[70] flex md:hidden" dir="rtl">
+    <div className="fixed inset-0 z-[120] flex md:hidden" dir="rtl">
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
 
