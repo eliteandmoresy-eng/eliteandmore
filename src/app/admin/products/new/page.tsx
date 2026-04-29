@@ -191,15 +191,7 @@ export default function NewProductPage() {
               className="bg-surface-dim/40 border-none rounded-2xl"
             />
 
-            <Input
-              label="رابط المنتج (Slug)"
-              placeholder="product-name"
-              required
-              error={errors.slug?.message}
-              {...register('slug')}
-              dir="ltr"
-              className="bg-surface-dim/40 border-none rounded-2xl"
-            />
+            <input type="hidden" {...register('slug')} />
 
             <Controller
               name="brand_id"

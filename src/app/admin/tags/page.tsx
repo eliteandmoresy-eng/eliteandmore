@@ -328,13 +328,7 @@ export default function TagsPage() {
               className="bg-surface-dim/50 border-none"
             />
 
-            <Input
-              label="Slug"
-              error={errors.slug?.message}
-              {...register('slug')}
-              dir="ltr"
-              className="bg-surface-dim/50 border-none"
-            />
+            <input type="hidden" {...register('slug')} />
           </div>
 
           <div className="h-px bg-elite-border/50" />

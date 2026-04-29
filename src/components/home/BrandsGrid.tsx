@@ -60,7 +60,7 @@ export default function BrandsGrid({ brands }: BrandsGridProps) {
 
             {/* Grid */}
             <motion.div 
-              className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center lg:grid lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-8"
+              className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-3 md:gap-8"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -76,7 +76,7 @@ export default function BrandsGrid({ brands }: BrandsGridProps) {
                     key={brand.id} 
                     variants={itemVariants}
                     className={cn(
-                      "md:w-[220px] lg:w-auto", // Consistent width on desktop if using flex
+                      "md:w-[220px]", // Consistent width on desktop if using flex
                       isFirstAndOddMobile ? "col-span-2 md:col-span-1" : ""
                     )}
                   >
@@ -87,6 +87,20 @@ export default function BrandsGrid({ brands }: BrandsGridProps) {
                         isFirstAndOddMobile ? "flex-col justify-center" : "justify-center"
                       )}
                     >
+                      {/* Cover Image Background */}
+                      {brand.cover_url && (
+                        <div className="absolute inset-0 z-0 overflow-hidden rounded-[2rem] md:rounded-[2.5rem]">
+                          <Image
+                            src={brand.cover_url}
+                            alt={`${brand.name} cover`}
+                            fill
+                            className="object-cover opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700"
+                            sizes="(max-width: 768px) 200px, 300px"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" />
+                        </div>
+                      )}
+
                       {/* Logo container */}
                       <div className={cn(
                         "relative flex items-center justify-center z-10",
