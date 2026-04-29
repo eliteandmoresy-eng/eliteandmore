@@ -126,13 +126,7 @@ export default function EditCategoryPage() {
             {...register('name')}
           />
 
-          <Input
-            label="Slug"
-            required
-            error={errors.slug?.message}
-            {...register('slug')}
-            dir="ltr"
-          />
+          <input type="hidden" {...register('slug')} />
 
           <Controller
             name="brand_id"

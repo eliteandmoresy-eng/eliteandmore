@@ -77,8 +77,23 @@ export default function BrandPageClient({ brand, categories }: BrandPageClientPr
         
         {/* Focused Brand Dashboard - Centered & Integrated */}
         <div className="max-w-4xl mx-auto mb-12 animate-fade-up">
-          <div className="bg-white/80 backdrop-blur-md rounded-[3.5rem] p-8 md:p-14 border border-elite-border shadow-2xl shadow-black/[0.03] flex flex-col items-center text-center relative overflow-hidden">
+          <div className="bg-white/80 backdrop-blur-md rounded-[3.5rem] p-8 md:p-14 border border-elite-border shadow-2xl shadow-black/[0.03] flex flex-col items-center text-center relative overflow-hidden z-0">
             
+            {/* Brand Cover Background */}
+            {brand.cover_url && (
+              <div className="absolute inset-0 z-[-1]">
+                <Image
+                  src={brand.cover_url}
+                  alt={`${brand.name} cover`}
+                  fill
+                  className="object-cover opacity-30"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 1024px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-transparent" />
+              </div>
+            )}
+
             {/* Logo (Integrated) */}
             <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden bg-white border border-elite-border p-3 mb-8 shadow-lg group hover:scale-105 transition-transform duration-500">
               <Image src={brand.logo_url} alt={brand.name} fill className="object-contain" sizes="128px" priority />

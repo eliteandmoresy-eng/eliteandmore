@@ -158,15 +158,7 @@ export default function EditBrandPage() {
                 className="bg-surface-dim/50 border-none focus:ring-2 focus:ring-gold/30"
               />
 
-              <Input
-                label="Slug (الرابط الفريد)"
-                placeholder="brand-name"
-                required
-                error={errors.slug?.message}
-                {...register('slug')}
-                dir="ltr"
-                className="bg-surface-dim/50 border-none focus:ring-2 focus:ring-gold/30"
-              />
+              <input type="hidden" {...register('slug')} />
             </div>
 
             <Textarea

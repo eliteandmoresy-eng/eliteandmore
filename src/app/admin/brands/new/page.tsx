@@ -130,15 +130,7 @@ export default function NewBrandPage() {
                 className="bg-surface-dim/50 border-none focus:ring-2 focus:ring-gold/30"
               />
 
-              <Input
-                label="Slug (الرابط الفريد)"
-                placeholder="loreal-paris"
-                required
-                error={errors.slug?.message}
-                {...register('slug')}
-                dir="ltr"
-                className="bg-surface-dim/50 border-none focus:ring-2 focus:ring-gold/30"
-              />
+              <input type="hidden" {...register('slug')} />
             </div>
 
             <Textarea
