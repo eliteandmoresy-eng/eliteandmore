@@ -52,7 +52,7 @@ export const productSchema = z.object({
   brand_id: z.string().uuid('البرند مطلوب'),
   category_id: z.string().uuid().nullable().optional(),
   name: z.string().min(2, 'الاسم مطلوب'),
-  slug: z.string().min(2, 'الـ slug مطلوب'),
+  slug: z.string().optional().default(''),
   description: z.string().optional(),
   price_syp: z.number().min(1, 'السعر مطلوب'),
   sale_enabled: z.boolean().default(false),

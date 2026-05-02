@@ -5,8 +5,8 @@ import { generateSlug } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
-// POST /api/fix-slugs - Admin only: generates slugs for all products missing them
-export async function POST(request: NextRequest) {
+// GET /api/fix-slugs - Admin only: generates slugs for all products missing them
+export async function GET(request: NextRequest) {
   const session = await getAuthSession(request);
   if (!session) {
     return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });

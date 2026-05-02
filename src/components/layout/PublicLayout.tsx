@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import TopAnnouncementBar from './TopAnnouncementBar';
 import Header from './Header';
 import Footer from './Footer';
@@ -36,18 +35,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <CreativeBackground density={pathname === '/' ? 'high' : 'low'} />
       <TopAnnouncementBar />
       <Header />
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.main
-          key={pathname}
-          initial={{ opacity: 0, x: 15 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -15 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="min-h-screen"
-        >
-          {children}
-        </motion.main>
-      </AnimatePresence>
+      <main className="min-h-screen animate-fade-in">
+        {children}
+      </main>
       <Footer />
       <BottomNav />
       <ScrollIndicator />

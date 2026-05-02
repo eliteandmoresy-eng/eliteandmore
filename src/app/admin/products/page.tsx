@@ -12,7 +12,7 @@ import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import Select from '@/components/ui/Select';
 import Badge from '@/components/ui/Badge';
 
-export default function ProductsPage() {
+function ProductsPageInner() {
   const [products, setProducts] = useState<Product[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -480,3 +480,10 @@ export default function ProductsPage() {
   );
 }
 
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center font-tajawal">جاري التحميل...</div>}>
+      <ProductsPageInner />
+    </Suspense>
+  );
+}

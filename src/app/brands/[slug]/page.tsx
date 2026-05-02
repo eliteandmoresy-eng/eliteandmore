@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import { Category } from '@/types';
 import BrandPageClient from './BrandPageClient';
 
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const { data: brand } = await supabase
     .from('brands')

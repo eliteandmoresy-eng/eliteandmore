@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { ArrowLeft, Layers } from 'lucide-react';
 import { Brand } from '@/types';
 
-export const revalidate = 60;
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'البرندات — Elite and More',

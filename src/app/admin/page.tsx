@@ -78,7 +78,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8 pb-10">
-      {/* ... (Header remains same) */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-cairo font-bold text-elite-text mb-1 flex items-center gap-3">
@@ -141,7 +140,7 @@ export default function AdminDashboard() {
         data={modal.data}
         loading={modal.loading}
       />
-// ... (rest remains same)
+
       <div className="grid grid-cols-1 gap-6">
          <div className="bg-white rounded-[32px] p-8 shadow-soft border border-white/50 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-8">
