@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Plus, Pencil, Trash2, ChevronRight, ChevronLeft, Search, Filter, Box, Tag, Building2, ImageIcon, MoreVertical, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Brand, Category, Product } from '@/types';
-import { formatSYP } from '@/lib/utils';
+import { cn, formatSYP } from '@/lib/utils';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import Select from '@/components/ui/Select';
 import Badge from '@/components/ui/Badge';
@@ -25,7 +26,17 @@ export default function ProductsPage() {
   const [filterBrand, setFilterBrand] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [filterStock, setFilterStock] = useState('');
   const [search, setSearch] = useState('');
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const stockParam = searchParams.get('stock');
+    if (stockParam) {
+      setFilterStock(stockParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetch('/api/brands?all=true')
@@ -56,6 +67,7 @@ export default function ProductsPage() {
       if (filterBrand) params.set('brand_id', filterBrand);
       if (filterCategory) params.set('category_id', filterCategory);
       if (filterStatus) params.set('is_active', filterStatus === 'active' ? 'true' : 'false');
+      if (filterStock) params.set('stock', filterStock);
       if (search) params.set('search', search);
 
       const res = await fetch(`/api/products?${params.toString()}`);
@@ -68,7 +80,7 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, filterBrand, filterCategory, filterStatus, search]);
+  }, [page, filterBrand, filterCategory, filterStatus, filterStock, search]);
 
   useEffect(() => {
     fetchProducts();
@@ -107,6 +119,11 @@ export default function ProductsPage() {
     { value: '', label: 'جميع الحالات' },
     { value: 'active', label: 'منتجات فعالة' },
     { value: 'inactive', label: 'منتجات معطلة' },
+  ];
+  const stockOptions = [
+    { value: '', label: 'جميع الحالات' },
+    { value: 'in_stock', label: 'متوفر' },
+    { value: 'out_of_stock', label: 'نفد من المخزون' },
   ];
 
   return (
@@ -236,7 +253,9 @@ export default function ProductsPage() {
                             <p className="font-bold text-elite-text text-base leading-tight line-clamp-1 mb-1">{product.name}</p>
                             <div className="flex items-center gap-1.5 grayscale opacity-60">
                                <Tag className="w-3 h-3 text-gold" />
-                               <span className="text-[10px] font-bold uppercase tracking-wider">{product.slug}</span>
+                               <span className={cn("text-[10px] font-bold uppercase tracking-wider", !product.slug && "text-red-500 bg-red-50 px-1 rounded")}>
+                                 {product.slug || "بدون رابط (خطأ)"}
+                               </span>
                             </div>
                           </div>
                         </div>

@@ -78,6 +78,7 @@ export const settingsSchema = z.object({
   free_shipping_threshold: z.number().nullable().optional(),
   whatsapp_number: z.string().min(5, 'رقم الواتساب مطلوب'),
   facebook_url: z.string().url().optional().or(z.literal('')),
+  instagram_url: z.string().url().optional().or(z.literal('')),
   contact_phone: z.string().min(5),
   contact_address: z.string().optional(),
   working_hours: z.string().optional(),

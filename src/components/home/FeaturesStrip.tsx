@@ -6,13 +6,13 @@ const features = [
   {
     icon: Truck,
     title: 'شحن لكل سوريا',
-    subtitle: 'نوصل لجميع المحافظات',
+    subtitle: 'توصيل لجميع المحافظات',
     color: 'primary'
   },
   {
     icon: Wallet,
     title: 'دفع عند الاستلام',
-    subtitle: 'ادفع لمّا توصلك الطلبية',
+    subtitle: 'ادفع عند استلام الطلبية',
     color: 'gold'
   },
   {

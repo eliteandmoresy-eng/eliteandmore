@@ -15,10 +15,15 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const isAdmin = pathname.startsWith('/admin');
 
-  // Force scroll restoration to auto for better UX on refresh
+  // Force scroll to top on every path change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  // Force scroll restoration to manual to prevent browser from jumping to previous positions
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'auto';
+      window.history.scrollRestoration = 'manual';
     }
   }, []);
 

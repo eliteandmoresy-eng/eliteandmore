@@ -81,6 +81,13 @@ export default function EditBrandPage() {
     load();
   }, [id, reset]);
 
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setValue('name', val);
+    const { generateSlug } = require('@/lib/utils');
+    setValue('slug', generateSlug(val));
+  };
+
   const onSubmit = async (data: BrandFormData) => {
     try {
       const res = await fetch(`/api/brands/${id}`, {
@@ -155,6 +162,7 @@ export default function EditBrandPage() {
                 required
                 error={errors.name?.message}
                 {...register('name')}
+                onChange={onNameChange}
                 className="bg-surface-dim/50 border-none focus:ring-2 focus:ring-gold/30"
               />
 

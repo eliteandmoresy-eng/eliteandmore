@@ -58,6 +58,12 @@ export async function PUT(
     const body = await request.json();
     const { images, variants, tag_ids, governorates: govs, ...productData } = body;
 
+    // Ensure slug exists
+    if (!productData.slug && productData.name) {
+      const { generateSlug } = await import('@/lib/utils');
+      productData.slug = generateSlug(productData.name);
+    }
+
     // Update product
     const { data: product, error } = await supabaseAdmin
       .from('products')

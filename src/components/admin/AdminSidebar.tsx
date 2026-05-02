@@ -34,7 +34,7 @@ export default function AdminSidebar({ onClose }: AdminSidebarProps) {
       {/* Brand Header */}
       <div className="p-8 pb-10">
         <div className="flex flex-col items-start gap-1">
-          <Logo size="md" dark={true} />
+          <Logo size="md" dark={true} href={null} />
           <div className="flex items-center gap-2 mt-2">
              <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Management Suite</span>

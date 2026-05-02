@@ -1,15 +1,26 @@
+'use client';
 import Link from 'next/link';
 import Logo from '@/components/ui/Logo';
-import { Phone, MapPin, Clock, Facebook, MessageCircle } from 'lucide-react';
+import { Phone, MapPin, Clock, Facebook, Instagram, MessageCircle, Home, ShoppingBag, Info, Heart, ShoppingCart, Grid3X3 } from 'lucide-react';
+import { useSettings } from '@/hooks/useSettings';
 import {
   WHATSAPP_NUMBER,
   FACEBOOK_URL,
+  INSTAGRAM_URL,
   CONTACT_PHONE,
   WORKING_HOURS,
 } from '@/lib/constants';
 
 export default function Footer() {
-  const waLink = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}`;
+  const { settings } = useSettings();
+  
+  const waNumber = settings.whatsapp_number || WHATSAPP_NUMBER;
+  const fbUrl = settings.facebook_url || FACEBOOK_URL;
+  const instaUrl = settings.instagram_url || INSTAGRAM_URL;
+  const contactPhone = settings.contact_phone || CONTACT_PHONE;
+  const workingHours = settings.working_hours || WORKING_HOURS;
+
+  const waLink = `https://wa.me/${waNumber.replace(/\D/g, '')}`;
 
   return (
     <footer className="bg-primary text-white mt-16">
@@ -32,17 +43,19 @@ export default function Footer() {
             <h3 className="font-cairo font-bold text-lg text-white">روابط سريعة</h3>
             <ul className="space-y-2.5">
               {[
-                { href: '/', label: 'الرئيسية' },
-                { href: '/shop', label: 'المتجر' },
-                { href: '/about', label: 'من نحن' },
-                { href: '/favorites', label: 'المفضلة' },
-                { href: '/cart', label: 'السلة' },
+                { href: '/', label: 'الرئيسية', icon: Home },
+                { href: '/shop', label: 'المتجر', icon: ShoppingBag },
+                { href: '/brands', label: 'البرندات', icon: Grid3X3 },
+                { href: '/about', label: 'من نحن', icon: Info },
+                { href: '/favorites', label: 'المفضلة', icon: Heart },
+                { href: '/cart', label: 'السلة', icon: ShoppingCart },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm font-tajawal text-white/75 hover:text-white transition-colors hover:pr-1"
+                    className="flex items-center gap-2.5 text-sm font-tajawal text-white/75 hover:text-white transition-all hover:pr-1 group"
                   >
+                    <link.icon className="w-4 h-4 text-gold/60 group-hover:text-gold transition-colors" />
                     {link.label}
                   </Link>
                 </li>
@@ -56,11 +69,11 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href={`tel:${CONTACT_PHONE.replace(/\D/g, '')}`}
+                  href={`tel:${contactPhone.replace(/\D/g, '')}`}
                   className="flex items-center gap-2.5 text-sm font-tajawal text-white/75 hover:text-white transition-colors"
                 >
                   <Phone className="w-4 h-4 text-gold flex-shrink-0" />
-                  <span dir="ltr">{CONTACT_PHONE}</span>
+                  <span dir="ltr">{contactPhone}</span>
                 </a>
               </li>
               <li>
@@ -80,7 +93,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2.5 text-sm font-tajawal text-white/75">
                 <Clock className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
-                <span>{WORKING_HOURS}</span>
+                <span>{workingHours}</span>
               </li>
             </ul>
           </div>
@@ -88,15 +101,27 @@ export default function Footer() {
           {/* Column 4: Social + Promise */}
           <div className="space-y-4">
             <h3 className="font-cairo font-bold text-lg text-white">تابعنا</h3>
-            <a
-              href={FACEBOOK_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1877F2] rounded-xl text-sm font-tajawal font-semibold hover:bg-[#166fe5] transition-colors"
-            >
-              <Facebook className="w-5 h-5" />
-              فيسبوك
-            </a>
+            <div className="flex flex-col gap-3">
+              <a
+                href={fbUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1877F2] rounded-xl text-sm font-tajawal font-semibold hover:bg-[#166fe5] transition-colors"
+              >
+                <Facebook className="w-5 h-5" />
+                فيسبوك
+              </a>
+
+              <a
+                href={instaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] rounded-xl text-sm font-tajawal font-semibold hover:opacity-90 transition-opacity"
+              >
+                <Instagram className="w-5 h-5" />
+                إنستغرام
+              </a>
+            </div>
 
             <div className="border border-gold/40 rounded-xl p-4 mt-4 space-y-1">
               <p className="text-gold font-cairo font-bold text-sm">وعدنا بالجودة</p>

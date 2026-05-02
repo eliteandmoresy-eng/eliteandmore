@@ -9,7 +9,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { ArrowRight, Box, CreditCard, LayoutGrid, Image as ImageIcon, Tags, MapPin, Settings, Save, Info, ExternalLink, Trash2 } from 'lucide-react';
 import { productSchema } from '@/lib/validators';
-import { formatUSD } from '@/lib/utils';
+import { formatUSD, generateSlug } from '@/lib/utils';
 import { Brand, Category, ProductVariant } from '@/types';
 import { useSettings } from '@/hooks/useSettings';
 import Input from '@/components/ui/Input';
@@ -154,6 +154,15 @@ export default function EditProductPage() {
     load();
   }, [id, reset]);
 
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setValue('name', val);
+    // Auto-generate slug if it's currently empty or invalid
+    if (!watch('slug') || watch('slug').length < 2) {
+      setValue('slug', generateSlug(val));
+    }
+  };
+
   const onSubmit = async (data: ProductFormData) => {
     try {
       const body = {
@@ -262,6 +271,7 @@ export default function EditProductPage() {
               required
               error={errors.name?.message}
               {...register('name')}
+              onChange={onNameChange}
               className="bg-surface-dim/40 border-none rounded-2xl"
             />
 
@@ -519,4 +529,3 @@ export default function EditProductPage() {
     </div>
   );
 }
-

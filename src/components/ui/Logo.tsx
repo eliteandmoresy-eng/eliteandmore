@@ -9,22 +9,32 @@ const sizes = {
 
 export default function Logo({
   size = 'md',
+  href = '/',
 }: {
   size?: 'sm' | 'md' | 'lg';
-  dark?: boolean; // kept for API compatibility, unused since image handles it
+  href?: string | null;
+  dark?: boolean;
 }) {
   const px = sizes[size];
 
+  const content = (
+    <Image
+      src="/images/logo.jpg"
+      alt="Elite and More"
+      width={px}
+      height={px}
+      className="rounded-xl object-cover"
+      priority
+    />
+  );
+
+  if (!href) {
+    return <div className="flex-shrink-0 block">{content}</div>;
+  }
+
   return (
-    <Link href="/" className="flex-shrink-0 block" aria-label="Elite and More — الرئيسية">
-      <Image
-        src="/images/logo.jpg"
-        alt="Elite and More"
-        width={px}
-        height={px}
-        className="rounded-xl object-cover"
-        priority
-      />
+    <Link href={href} className="flex-shrink-0 block" aria-label="Elite and More — الرئيسية">
+      {content}
     </Link>
   );
 }

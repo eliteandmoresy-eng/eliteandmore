@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
-import { Phone, Clock, MapPin, MessageCircle, Facebook, ShieldCheck, Truck, Star, Sparkles, ArrowRight } from 'lucide-react';
+import { Phone, Clock, MapPin, MessageCircle, Facebook, Instagram, ShieldCheck, Truck, Star, Sparkles, ArrowRight } from 'lucide-react';
 import { SiteSettings } from '@/types';
-import { WHATSAPP_NUMBER, FACEBOOK_URL } from '@/lib/constants';
+import { WHATSAPP_NUMBER, FACEBOOK_URL, INSTAGRAM_URL } from '@/lib/constants';
 import { getWhatsAppLink } from '@/lib/whatsapp';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,13 +29,14 @@ const values = [
 export default async function AboutPage() {
   const { data: settings } = await supabase
     .from('settings')
-    .select('contact_phone, working_hours, contact_address, about_full, facebook_url, whatsapp_number')
+    .select('contact_phone, working_hours, contact_address, about_full, facebook_url, instagram_url, whatsapp_number')
     .single();
 
   const s = (settings ?? {}) as Partial<SiteSettings>;
 
   const whatsappPhone = s.whatsapp_number ?? WHATSAPP_NUMBER;
   const facebookUrl = s.facebook_url ?? FACEBOOK_URL;
+  const instagramUrl = s.instagram_url ?? INSTAGRAM_URL;
   const whatsappLink = getWhatsAppLink(whatsappPhone, 'مرحباً، أريد الاستفسار عن منتجاتكم.');
 
   return (
@@ -160,6 +161,21 @@ export default async function AboutPage() {
                             <div className="flex items-center gap-4">
                                 <Facebook className="w-7 h-7" />
                                 <span className="text-lg">فيسبوك</span>
+                            </div>
+                            <ArrowRight className="w-5 h-5 rotate-180 group-hover:-translate-x-2 transition-transform" />
+                        </a>
+                    )}
+
+                    {instagramUrl && (
+                        <a
+                            href={instagramUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between gap-3 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:opacity-90 text-white font-tajawal font-black py-5 px-8 rounded-3xl transition-all shadow-xl shadow-purple-500/20 active:scale-95 group"
+                        >
+                            <div className="flex items-center gap-4">
+                                <Instagram className="w-7 h-7" />
+                                <span className="text-lg">إنستغرام</span>
                             </div>
                             <ArrowRight className="w-5 h-5 rotate-180 group-hover:-translate-x-2 transition-transform" />
                         </a>

@@ -5,6 +5,7 @@ export interface SiteSettings {
   free_shipping_threshold: number | null;
   whatsapp_number: string;
   facebook_url: string;
+  instagram_url: string | null;
   contact_phone: string;
   contact_address: string | null;
   working_hours: string;

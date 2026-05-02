@@ -85,7 +85,7 @@ export default function GovernoratesPage() {
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setValue('name', val);
-    if (!editingId) setValue('slug', generateSlug(val));
+    setValue('slug', generateSlug(val));
   };
 
   const onSubmit = async (data: GovFormData) => {

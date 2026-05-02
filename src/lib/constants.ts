@@ -2,6 +2,7 @@ export const SITE_NAME = 'Elite and More';
 export const SITE_TAGLINE = 'The Best In your Hands';
 export const WHATSAPP_NUMBER = '+963936666950';
 export const FACEBOOK_URL = 'https://www.facebook.com/share/1CvRRr3Jrp/';
+export const INSTAGRAM_URL = 'https://instagram.com/';
 export const CONTACT_PHONE = '+963 936 666 950';
 export const WORKING_HOURS = 'السبت - الخميس: 9:00 صباحاً - 9:00 مساءً | الجمعة: مغلق';
 export const DEFAULT_EXCHANGE_RATE = 15000;

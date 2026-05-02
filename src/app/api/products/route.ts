@@ -22,6 +22,10 @@ export async function GET(request: NextRequest) {
   const sort = searchParams.get('sort') || 'newest';
 
   try {
+    const session = await getAuthSession();
+    const isAdmin = !!session;
+    const stockStatus = searchParams.get('stock'); // 'in_stock' or 'out_of_stock'
+
     let query = supabase
       .from('products')
       .select(
@@ -32,8 +36,19 @@ export async function GET(request: NextRequest) {
         tags:product_tags(tag:tags(*)),
         governorates:product_governorates(*)`,
         { count: 'exact' }
-      )
-      .eq('is_active', true);
+      );
+
+    if (!isAdmin) {
+      query = query.eq('is_active', true);
+    } else {
+      // Admin can filter by is_active explicitly
+      const isActive = searchParams.get('is_active');
+      if (isActive) query = query.eq('is_active', isActive === 'true');
+    }
+
+    if (stockStatus) {
+      query = query.eq('stock_status', stockStatus);
+    }
 
     // Brand filter by slug
     if (brandSlug) {
@@ -159,6 +174,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { images, variants, tag_ids, governorates: govs, ...productData } = body;
+
+    // Ensure slug exists
+    if (!productData.slug && productData.name) {
+      const { generateSlug } = await import('@/lib/utils');
+      productData.slug = generateSlug(productData.name);
+    }
 
     // Insert product
     const { data: product, error } = await supabaseAdmin

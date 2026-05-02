@@ -5,7 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
-import { Globe, CreditCard, Share2, Info, Save, Settings, Phone, MapPin, Clock, MessageSquare, Facebook, QrCode } from 'lucide-react';
+import { Globe, CreditCard, Share2, Info, Save, Settings, Phone, MapPin, Clock, MessageSquare, Facebook, Instagram, QrCode } from 'lucide-react';
 import { settingsSchema } from '@/lib/validators';
 import Input from '@/components/ui/Input';
 import Textarea from '@/components/ui/Textarea';
@@ -34,6 +34,7 @@ export default function SettingsPage() {
       free_shipping_threshold: null,
       whatsapp_number: '',
       facebook_url: '',
+      instagram_url: '',
       contact_phone: '',
       contact_address: '',
       working_hours: '',
@@ -61,6 +62,7 @@ export default function SettingsPage() {
             free_shipping_threshold: s.free_shipping_threshold ?? null,
             whatsapp_number: s.whatsapp_number ?? '',
             facebook_url: s.facebook_url ?? '',
+            instagram_url: s.instagram_url ?? '',
             contact_phone: s.contact_phone ?? '',
             contact_address: s.contact_address ?? '',
             working_hours: s.working_hours ?? '',
@@ -218,6 +220,16 @@ export default function SettingsPage() {
                 {...register('facebook_url')}
                 dir="ltr"
                 placeholder="https://facebook.com/..."
+                className="bg-surface-dim/40 border-none rounded-2xl"
+              />
+
+              <Input
+                label="رابط إنستغرام"
+                icon={<Instagram className="w-4 h-4" />}
+                error={errors.instagram_url?.message}
+                {...register('instagram_url')}
+                dir="ltr"
+                placeholder="https://instagram.com/..."
                 className="bg-surface-dim/40 border-none rounded-2xl"
               />
             </div>

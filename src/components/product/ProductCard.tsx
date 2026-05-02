@@ -1,12 +1,11 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart } from 'lucide-react';
 import { Product } from '@/types';
 import { cn, getPrimaryImage } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
 import { useSettings } from '@/hooks/useSettings';
-import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import FavoriteButton from '@/components/product/FavoriteButton';
 import PriceDisplay from '@/components/product/PriceDisplay';
@@ -16,16 +15,11 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const router = useRouter();
   const addItem = useCartStore((s) => s.addItem);
   const { settings } = useSettings();
 
   const imageUrl = getPrimaryImage(product.images);
   const inStock = product.stock_status === 'in_stock';
-
-  const handleCardClick = () => {
-    router.push(`/products/${product.slug}`);
-  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -44,8 +38,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div
-      onClick={handleCardClick}
+    <Link
+      href={`/products/${product.slug || ''}`}
       className={cn(
         'group relative flex flex-col bg-white rounded-[2rem] border border-elite-border overflow-hidden cursor-pointer',
         'shadow-sm transition-all duration-500 hover:shadow-xl hover:scale-[1.02] hover:border-primary/10'
@@ -132,6 +126,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

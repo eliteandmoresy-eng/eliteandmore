@@ -77,6 +77,13 @@ export default function EditCategoryPage() {
     load();
   }, [id, reset]);
 
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setValue('name', val);
+    const { generateSlug } = require('@/lib/utils');
+    setValue('slug', generateSlug(val));
+  };
+
   const onSubmit = async (data: CategoryFormData) => {
     try {
       const res = await fetch(`/api/categories/${id}`, {
@@ -124,6 +131,7 @@ export default function EditCategoryPage() {
             required
             error={errors.name?.message}
             {...register('name')}
+            onChange={onNameChange}
           />
 
           <input type="hidden" {...register('slug')} />

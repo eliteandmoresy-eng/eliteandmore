@@ -119,7 +119,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </button>
           <span className="text-base font-bold font-cairo text-elite-text truncate">{pageTitle}</span>
           <div className="flex-shrink-0">
-            <Logo size="sm" />
+            <Logo size="sm" href={null} />
           </div>
         </header>
 
