@@ -13,11 +13,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Get all products that have a null or empty slug
+    // Get products with null/empty slugs OR slugs containing spaces
     const { data: products, error } = await supabaseAdmin
       .from('products')
       .select('id, name, slug')
-      .or('slug.is.null,slug.eq.');
+      .or('slug.is.null,slug.eq.,slug.ilike."% %"');
 
     if (error) throw error;
     if (!products || products.length === 0) {

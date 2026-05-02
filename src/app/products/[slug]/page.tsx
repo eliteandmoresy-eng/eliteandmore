@@ -7,10 +7,11 @@ export const revalidate = 0;
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const decodedSlug = decodeURIComponent(params.slug);
   const { data } = await supabase
     .from('products')
     .select('name, description')
-    .eq('slug', params.slug)
+    .or(`slug.eq."${params.slug}",slug.eq."${decodedSlug}"`)
     .single();
   return {
     title: data ? `${data.name} — Elite and More` : 'Elite and More',
@@ -19,7 +20,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const { data: product } = await supabase
+  const decodedSlug = decodeURIComponent(params.slug);
+
+  const baseQuery = supabase
     .from('products')
     .select(`
       *,
@@ -30,9 +33,17 @@ export default async function ProductPage({ params }: { params: { slug: string }
       tags:product_tags(tag:tags(*)),
       governorates:product_governorates(*, governorate:governorates(*))
     `)
-    .eq('slug', params.slug)
-    .eq('is_active', true)
-    .single();
+    .or(`slug.eq."${params.slug}",slug.eq."${decodedSlug}"`);
+
+  const { data: session } = await supabase.auth.getSession();
+  const isAdmin = !!session?.session;
+
+  let query = baseQuery;
+  if (!isAdmin) {
+    query = query.eq('is_active', true);
+  }
+
+  const { data: product } = await query.single();
 
   if (!product) notFound();
 
