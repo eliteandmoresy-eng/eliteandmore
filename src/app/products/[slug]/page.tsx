@@ -1,10 +1,10 @@
 import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
+import { Product } from '@/types';
+import ProductPageClient from './ProductPageClient';
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
-import { Product } from '@/types';
-import ProductPageClient from './ProductPageClient';
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const { data } = await supabase
