@@ -118,6 +118,7 @@ export interface Product {
 export interface Banner {
   id: string;
   title: string | null;
+  description?: string | null;
   image_url: string;
   cloudinary_public_id: string | null;
   link_url: string | null;
