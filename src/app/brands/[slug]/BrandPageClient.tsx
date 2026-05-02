@@ -89,11 +89,15 @@ export default function BrandPageClient({ brand, categories }: BrandPageClientPr
                   priority
                 />
               ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-dark to-black" />
+                <div className="absolute inset-0 bg-primary overflow-hidden">
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-dark to-black opacity-90" />
+                  <div className="absolute -top-24 -left-24 w-96 h-96 bg-gold/20 rounded-full blur-[120px] animate-pulse" />
+                </div>
               )}
               {/* Gradient Overlay for Text Readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-transparent" />
             </div>
 
             {/* Brand Info Overlay */}

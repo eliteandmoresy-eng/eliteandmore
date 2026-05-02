@@ -135,19 +135,21 @@ export default async function HomePage() {
       {featuredProducts && featuredProducts.length > 0 && (
         <section className="py-8 md:py-12 bg-white border-t border-elite-border/10">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center justify-between mb-8 md:mb-12 md:px-2">
-              <div className="flex items-center gap-4">
-                <div className="w-2 h-10 md:h-14 rounded-full bg-gold flex-shrink-0" />
-                <div>
-                  <span className="font-tajawal text-[10px] md:text-xs text-elite-muted uppercase tracking-widest font-bold block mb-1">مختاراتنا</span>
-                  <h2 className="font-cairo font-black text-2xl md:text-4xl text-elite-text leading-none">
-                    منتجاتنا المختارة لك
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-16 gap-6 md:px-2">
+              <div className="flex items-center gap-4 md:gap-6">
+                <div className="w-2 h-12 md:h-20 rounded-full bg-gold flex-shrink-0 shadow-[0_0_15px_rgba(212,175,55,0.3)]" />
+                <div className="space-y-1">
+                  <span className="font-tajawal text-[11px] md:text-sm text-primary font-black uppercase tracking-[0.2em] block">مختارات النخبة</span>
+                  <h2 className="font-cairo font-black text-3xl md:text-5xl text-elite-text leading-none">
+                    منتجات مختارة لك
                   </h2>
                 </div>
               </div>
-              <p className="hidden lg:block font-tajawal text-sm text-elite-muted max-w-xs text-left">
-                تشكيلة حصرية من أفضل المنتجات العالمية التي نثق بجودتها
-              </p>
+              <div className="max-w-md">
+                <p className="font-tajawal text-sm md:text-lg text-elite-muted leading-relaxed border-r-2 md:border-r-4 border-gold/20 pr-4 md:pr-6">
+                  تشكيلة حصرية من أفضل المنتجات العالمية التي نثق بجودتها، مختارة بعناية لتناسب ذوقك الرفيع.
+                </p>
+              </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
               {featuredProducts.map((product) => (

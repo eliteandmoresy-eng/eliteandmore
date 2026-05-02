@@ -83,52 +83,46 @@ export default function BrandsGrid({ brands }: BrandsGridProps) {
                     <Link
                       href={`/brands/${brand.slug}`}
                       className={cn(
-                        "group relative flex flex-col items-center gap-3 md:gap-4 p-4 md:p-8 bg-white rounded-[2rem] md:rounded-[2.5rem] border-2 border-elite-border/60 hover:border-gold/40 shadow-none hover:shadow-2xl hover:shadow-gold/5 transition-all duration-500 overflow-hidden h-full",
-                        isFirstAndOddMobile ? "flex-col justify-center" : "justify-center"
+                        "group relative flex flex-col items-center justify-center gap-3 md:gap-4 p-4 md:p-8 bg-white rounded-[2rem] md:rounded-[2.5rem] border border-elite-border shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden h-full",
                       )}
                     >
-                      {/* Cover Image Background */}
-                      {brand.cover_url && (
-                        <div className="absolute inset-0 z-0 overflow-hidden rounded-[2rem] md:rounded-[2.5rem]">
+                      {/* Cover Image Background - More Visible Now */}
+                      {brand.cover_url ? (
+                        <div className="absolute inset-0 z-0">
                           <Image
                             src={brand.cover_url}
                             alt={`${brand.name} cover`}
                             fill
-                            className="object-cover opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700"
+                            className="object-cover opacity-20 group-hover:opacity-40 group-hover:scale-110 transition-all duration-700"
                             sizes="(max-width: 768px) 200px, 300px"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent" />
                         </div>
+                      ) : (
+                        <div className="absolute inset-0 z-0 bg-gradient-to-br from-primary/5 to-gold/5" />
                       )}
 
                       {/* Logo container */}
-                      <div className={cn(
-                        "relative flex items-center justify-center z-10",
-                        isFirstAndOddMobile ? "w-full h-16 md:h-20" : "w-full h-10 md:h-20"
-                      )}>
+                      <div className="relative w-full h-16 md:h-24 flex items-center justify-center z-10">
                         <Image
                           src={brand.logo_url}
                           alt={brand.name}
-                          width={isFirstAndOddMobile ? 180 : 140}
-                          height={isFirstAndOddMobile ? 120 : 100}
-                          className="object-contain max-h-full max-w-full drop-shadow-sm group-hover:drop-shadow-md group-hover:scale-110 transition-all duration-500 ease-out p-0.5 md:p-1 relative z-10"
+                          width={140}
+                          height={100}
+                          className="object-contain max-h-full max-w-[80%] drop-shadow-md group-hover:scale-110 transition-all duration-500 ease-out p-1"
                         />
                       </div>
 
                       {/* Info */}
                       <div className="z-10 text-center">
-                        <p className={cn(
-                          "font-cairo font-black text-elite-text group-hover:text-primary transition-colors duration-300",
-                          isFirstAndOddMobile ? "text-lg md:text-sm" : "text-xs md:text-sm"
-                        )}>
+                        <p className="font-cairo font-black text-xs md:text-sm text-elite-text group-hover:text-primary transition-colors duration-300">
                           {brand.name}
                         </p>
-                        <div className="h-0.5 w-6 mx-auto bg-gold/20 group-hover:w-full group-hover:bg-gold/40 rounded-full mt-2 transition-all duration-500" />
+                        <div className="h-1 w-8 mx-auto bg-gold/30 group-hover:w-12 group-hover:bg-gold rounded-full mt-2 transition-all duration-500" />
                       </div>
 
-                      {/* Decorations */}
-                      <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary/5 rounded-full scale-0 group-hover:scale-[8] transition-all duration-700 ease-in-out pointer-events-none z-0 blur-xl" />
-                      <div className="absolute -top-12 -right-12 w-24 h-24 bg-gold/5 rounded-full scale-0 group-hover:scale-[4] transition-all duration-500 ease-in-out delay-100 pointer-events-none z-0 blur-lg" />
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.02] transition-colors duration-500" />
                     </Link>
                   </motion.div>
                 );

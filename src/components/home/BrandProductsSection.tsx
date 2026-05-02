@@ -32,21 +32,36 @@ export default function BrandProductsSection({
     <section id={brand.slug} className="py-12 md:py-20 bg-cream">
       <div className="max-w-7xl mx-auto px-4">
         
-        {/* Unified Brand Header Section - More compact & focused */}
+        {/* Unified Brand Header Section - Premium Cover Version */}
         <div className="max-w-4xl mx-auto mb-12 md:mb-16">
-          <div className="bg-white/50 backdrop-blur-sm rounded-[3rem] p-8 md:p-12 border border-elite-border shadow-soft flex flex-col items-center text-center relative overflow-hidden">
-            {/* Background Decorative element */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl -mr-16 -mt-16" />
+          <div className="relative bg-white/80 backdrop-blur-md rounded-[3rem] p-8 md:p-14 border border-elite-border shadow-soft flex flex-col items-center text-center overflow-hidden group">
+            
+            {/* Brand Cover Background - Clearer & More Vivid */}
+            {brand.cover_url && (
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src={brand.cover_url}
+                  alt={`${brand.name} cover`}
+                  fill
+                  className="object-cover opacity-35 group-hover:opacity-50 group-hover:scale-105 transition-all duration-1000"
+                  sizes="(max-width: 1024px) 100vw, 1024px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent" />
+              </div>
+            )}
             
             {/* Logo */}
-            <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden bg-white border border-elite-border p-2 mb-6 shadow-md z-10">
-              <Image src={brand.logo_url} alt={brand.name} fill className="object-contain" sizes="96px" />
+            <div className="relative w-20 h-20 md:w-28 md:h-28 rounded-[1.5rem] overflow-hidden bg-white border border-elite-border/50 p-3 mb-6 shadow-xl z-10 group-hover:scale-110 transition-transform duration-500">
+              <Image src={brand.logo_url} alt={brand.name} fill className="object-contain" sizes="112px" />
             </div>
 
             {/* Name & Desc */}
-            <h2 className="font-cairo font-black text-3xl md:text-5xl text-elite-text mb-4 z-10">{brand.name}</h2>
+            <div className="relative z-10 flex flex-col items-center gap-1">
+              <span className="text-[10px] font-tajawal font-black text-primary uppercase tracking-[0.2em] opacity-70">تشكيلة ماركة</span>
+              <h2 className="font-cairo font-black text-3xl md:text-5xl text-elite-text mb-4">{brand.name}</h2>
+            </div>
             {brand.description && (
-              <p className="font-tajawal text-sm md:text-base text-elite-muted max-w-xl leading-relaxed mb-8 z-10">
+              <p className="relative z-10 font-tajawal text-sm md:text-base text-elite-muted max-w-xl leading-relaxed mb-8 opacity-80">
                 {brand.description}
               </p>
             )}
