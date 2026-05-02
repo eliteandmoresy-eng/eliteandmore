@@ -8,7 +8,7 @@ import { MessageCircle } from 'lucide-react';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { Governorate } from '@/types';
-import { formatSYP } from '@/lib/utils';
+import { formatSYP, cn } from '@/lib/utils';
 import { buildOrderMessage, getWhatsAppLink } from '@/lib/whatsapp';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { checkoutSchema } from '@/lib/validators';
@@ -36,11 +36,18 @@ export default function CheckoutPage() {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    watch,
+    formState: { errors, isValid, isDirty },
   } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
+    mode: 'onChange',
     defaultValues: { payment_method: 'cod', notes: '' },
   });
+
+  const notesValue = watch('notes');
+  const isShamCash = paymentMethod === 'sham_cash';
+  const shamCashNotesValid = !isShamCash || (notesValue && notesValue.trim().length >= 5);
+  const isFormValid = isValid && selectedGovernorate !== null && shamCashNotesValid;
 
   // Redirect if cart empty
   useEffect(() => {
@@ -69,8 +76,8 @@ export default function CheckoutPage() {
   const handleGovernorateChange = (govId: string) => {
     const gov = governorates.find((g) => g.id === govId) ?? null;
     setSelectedGovernorate(gov);
-    setValue('governorate_id', govId);
-    setValue('governorate_name', gov?.name ?? '');
+    setValue('governorate_id', govId, { shouldValidate: true });
+    setValue('governorate_name', gov?.name ?? '', { shouldValidate: true });
   };
 
   const onSubmit = async (data: CheckoutFormValues) => {
@@ -175,13 +182,35 @@ export default function CheckoutPage() {
 
                 {/* Notes */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-semibold text-elite-text font-tajawal">ملاحظات</label>
+                  <label className="text-sm font-semibold text-elite-text font-tajawal">
+                    ملاحظات {isShamCash && <span className="text-[#EF4444] mr-1">*</span>}
+                  </label>
+                  
+                  {isShamCash && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex flex-col gap-1">
+                      <p className="font-cairo font-bold text-amber-700 text-xs flex items-center gap-1.5">
+                        <span>📝</span> مطلوب عند الدفع عبر شام كاش
+                      </p>
+                      <p className="font-tajawal text-[11px] text-amber-600 leading-relaxed">
+                        يرجى كتابة: <span className="font-bold">اسمك الكامل</span>، <span className="font-bold">اسم المنتج/المنتجات</span>، و<span className="font-bold">المبلغ الإجمالي النهائي الذي قمت بتحويله</span> (ثمن المنتجات + التوصيل = <span className="font-black text-amber-800">{formatSYP(total)}</span>).
+                      </p>
+                    </div>
+                  )}
+                  
                   <textarea
-                    rows={2}
-                    placeholder="أي ملاحظات إضافية..."
-                    className="w-full border border-elite-border rounded-xl px-4 py-2.5 text-sm font-tajawal text-elite-text bg-white placeholder:text-elite-muted/60 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary transition-all resize-y"
+                    rows={isShamCash ? 3 : 2}
+                    placeholder={isShamCash 
+                      ? `مثال: محمد أحمد - ${items.map(i => i.name).slice(0, 2).join('، ')}${items.length > 2 ? '...' : ''} - المبلغ المحوّل ${formatSYP(total)}` 
+                      : "أي ملاحظات إضافية..."}
+                    className={cn(
+                      'w-full border rounded-xl px-4 py-2.5 text-sm font-tajawal text-elite-text bg-white placeholder:text-elite-muted/60 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary transition-all resize-y',
+                      isShamCash && !shamCashNotesValid ? 'border-[#EF4444] bg-red-50/30' : 'border-elite-border'
+                    )}
                     {...register('notes')}
                   />
+                  {isShamCash && !shamCashNotesValid && (
+                    <p className="text-xs text-[#EF4444] font-tajawal">يرجى كتابة الملاحظات المطلوبة لتأكيد الدفع عبر شام كاش</p>
+                  )}
                 </div>
               </div>
 
@@ -256,16 +285,42 @@ export default function CheckoutPage() {
               </div>
 
               {/* Submit */}
-              <Button
-                type="submit"
-                variant="gold"
-                size="lg"
-                full
-                loading={submitting}
-                icon={<MessageCircle className="w-5 h-5" />}
-              >
-                إرسال الطلب عبر الواتساب
-              </Button>
+              <div className="flex flex-col gap-4">
+                <Button
+                  type="submit"
+                  variant="gold"
+                  size="lg"
+                  full
+                  loading={submitting}
+                  disabled={!isFormValid}
+                  icon={isFormValid ? <MessageCircle className="w-5 h-5" /> : <span className="text-xl">🔒</span>}
+                  className={cn(
+                    'transition-all duration-300',
+                    !isFormValid && 'bg-elite-muted/20 text-elite-muted grayscale opacity-70'
+                  )}
+                >
+                  {isFormValid ? 'إرسال الطلب عبر الواتساب' : 'الزر معطل - بيانات ناقصة'}
+                </Button>
+                
+                {!isFormValid && (
+                  <div className="bg-red-50 border-2 border-red-100 rounded-2xl p-4 flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-500">
+                    <p className="font-cairo font-black text-red-600 text-sm flex items-center gap-2">
+                      <span>⚠️</span> لماذا لا يمكنني الضغط على الزر؟
+                    </p>
+                    <p className="font-tajawal text-xs text-red-500 leading-relaxed">
+                      يجب عليك تعبئة جميع الحقول التي بجانبها علامة (*) وهي: 
+                      <span className="font-bold"> (الاسم، الهاتف، العنوان التفصيلي) </span> 
+                      بالإضافة إلى ضرورة <span className="font-bold">اختيار المحافظة</span> من القائمة المنسدلة أعلاه.
+                    </p>
+                  </div>
+                )}
+                
+                {isFormValid && (
+                  <p className="text-[11px] text-green-600 font-bold font-tajawal text-center bg-green-50 py-2 rounded-xl">
+                    ✅ رائع! جميع البيانات مكتملة، يمكنك الآن إرسال طلبك.
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Cart summary — 2/5 */}

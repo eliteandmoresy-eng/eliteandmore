@@ -1,16 +1,15 @@
 import { z } from 'zod';
 
 export const checkoutSchema = z.object({
-  full_name: z.string().min(3, 'الاسم يجب أن يكون 3 أحرف على الأقل'),
+  full_name: z.string().min(2, 'الاسم مطلوب'),
   phone: z
     .string()
-    .min(9, 'رقم الهاتف غير صحيح')
-    .regex(/^(\+963|0)?9\d{8}$/, 'يجب أن يكون رقم سوري (09xxxxxxxx)'),
-  governorate_id: z.string().uuid('يرجى اختيار المحافظة'),
-  governorate_name: z.string(),
-  address: z.string().min(10, 'يرجى كتابة العنوان بالتفصيل (10 أحرف على الأقل)'),
+    .min(9, 'رقم الهاتف غير صحيح'),
+  governorate_id: z.string().min(1, 'يرجى اختيار المحافظة'),
+  governorate_name: z.string().optional(),
+  address: z.string().min(5, 'يرجى كتابة العنوان بالتفصيل'),
   notes: z.string().optional().default(''),
-  payment_method: z.enum(['cod', 'sham_cash']),
+  payment_method: z.enum(['cod', 'sham_cash']).default('cod'),
 });
 
 export const brandSchema = z.object({

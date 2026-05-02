@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import { MessageCircle, Plus, Minus, ShoppingCart, Shield, Truck, RotateCcw, ChevronLeft, ArrowRight, MapPin, ChevronDown } from 'lucide-react';
 import { Product, ProductVariant } from '@/types';
 import { getPrimaryImage, formatSYP } from '@/lib/utils';
@@ -99,11 +100,12 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
         governorate: selectedGov || undefined,
       });
       setAddedToCart(true);
+      toast.success('تمت إضافة المنتج إلى السلة');
       setTimeout(() => setAddedToCart(false), 2000);
     } catch (e: any) {
       if (e.message.startsWith('MISMATCH:')) {
         const currentGov = e.message.split(': ')[1];
-        alert(`تنبيه: السلة تحتوي بالفعل على منتجات لمحافظة ${currentGov}. يرجى إتمام الطلب أو إفراغ السلة قبل إضافة منتجات لمحافظة أخرى.`);
+        toast.error(`تنبيه: السلة تحتوي بالفعل على منتجات لمحافظة ${currentGov}. يرجى إتمام الطلب أو إفراغ السلة قبل إضافة منتجات لمحافظة أخرى.`);
       }
     }
   };

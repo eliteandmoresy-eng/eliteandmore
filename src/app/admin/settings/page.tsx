@@ -53,7 +53,7 @@ export default function SettingsPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch('/api/settings');
+        const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
         const json = await res.json();
         if (json.data) {
           const s = json.data;
@@ -92,6 +92,12 @@ export default function SettingsPage() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'فشل الحفظ');
+      
+      // Force reset form with actual data returned from server
+      if (json.data) {
+        reset(json.data);
+      }
+      
       toast.success('تم حفظ الإعدادات بنجاح');
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'فشل الحفظ');
@@ -313,7 +319,12 @@ export default function SettingsPage() {
                 name="sham_cash_enabled"
                 control={control}
                 render={({ field }) => (
-                  <Switch checked={field.value} onChange={field.onChange} />
+                  <Switch 
+                    checked={field.value === true} 
+                    onChange={(val) => {
+                      field.onChange(val);
+                    }} 
+                  />
                 )}
               />
             </div>

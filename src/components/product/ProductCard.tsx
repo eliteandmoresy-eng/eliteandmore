@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { Product } from '@/types';
 import { cn, getPrimaryImage } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
@@ -35,6 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       price_syp: product.sale_enabled && product.sale_price_syp ? product.sale_price_syp : product.price_syp,
       quantity: 1,
     });
+    toast.success('تمت إضافة المنتج إلى السلة');
   };
 
   return (

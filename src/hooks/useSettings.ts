@@ -14,12 +14,12 @@ export function useSettings() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/settings')
+    fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' })
       .then((r) => r.json())
       .then((d) => { if (d.data) setSettings(d.data); })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
-  return { settings, loading };
+  return { settings, loading, refresh: () => setLoading(true) };
 }
