@@ -154,7 +154,7 @@ export interface CheckoutFormData {
   full_name: string;
   phone: string;
   governorate_id: string;
-  governorate_name: string;
+  governorate_name?: string;
   address: string;
   notes: string;
   payment_method: 'cod' | 'sham_cash';
