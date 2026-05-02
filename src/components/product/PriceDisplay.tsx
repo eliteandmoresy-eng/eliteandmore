@@ -32,33 +32,48 @@ export default function PriceDisplay({
     lg: 'text-sm',
   }[size];
 
+  const usdValue = showSale ? (salePriceSYP! / exchangeRate) : (priceSYP / exchangeRate);
+
   if (showSale) {
     return (
-      <div className="flex flex-wrap items-center gap-2">
-        <span className={cn('font-bold text-primary', priceTextSize)}>
-          {formatSYP(salePriceSYP!)}
-        </span>
-        <span className="text-elite-muted text-sm line-through">
-          {formatSYP(priceSYP)}
-        </span>
-        <span className={cn('text-elite-muted', usdTextSize)}>
-          {formatUSD(salePriceSYP!, exchangeRate)}
-        </span>
-        <span className="bg-gold text-primary-dark text-xs font-bold px-2 py-0.5 rounded">
-          -{discount}%
-        </span>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <div className="flex items-baseline gap-1">
+          <span className={cn('font-black text-primary font-cairo', priceTextSize)}>
+            {formatSYP(salePriceSYP!).split(' ')[0]}
+          </span>
+          <span className="text-[10px] font-bold text-primary opacity-70">ل.س</span>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <span className="text-elite-muted text-[11px] line-through opacity-50 decoration-red-500/20">
+            {formatSYP(priceSYP)}
+          </span>
+          <span className="bg-red-50 text-red-600 text-[9px] font-black px-1.5 py-0.5 rounded-md border border-red-100">
+            -{discount}%
+          </span>
+        </div>
+
+        <div className={cn('bg-surface-dim/80 px-2 py-0.5 rounded-lg border border-white/50 flex items-center gap-1 shadow-sm', usdTextSize)}>
+          <span className="w-1 h-1 rounded-full bg-gold" />
+          <span className="font-tajawal font-black text-elite-text">{usdValue.toFixed(2)} $</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className={cn('font-bold text-primary', priceTextSize)}>
-        {formatSYP(priceSYP)}
-      </span>
-      <span className={cn('text-elite-muted', usdTextSize)}>
-        {formatUSD(priceSYP, exchangeRate)}
-      </span>
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <div className="flex items-baseline gap-1">
+        <span className={cn('font-black text-primary font-cairo', priceTextSize)}>
+          {formatSYP(priceSYP).split(' ')[0]}
+        </span>
+        <span className="text-[10px] font-bold text-primary opacity-70">ل.س</span>
+      </div>
+
+      <div className={cn('bg-surface-dim/80 px-2 py-0.5 rounded-lg border border-white/50 flex items-center gap-1 shadow-sm', usdTextSize)}>
+        <span className="w-1 h-1 rounded-full bg-gold" />
+        <span className="font-tajawal font-black text-elite-text">{usdValue.toFixed(2)} $</span>
+      </div>
     </div>
   );
 }

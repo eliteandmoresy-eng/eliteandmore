@@ -223,32 +223,57 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
               )}
             </div>
 
-            {/* Price section - Cleaner */}
-            <div className="flex items-center justify-between pb-6 border-b border-elite-border/10">
-              <div className="flex flex-col">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-cairo font-black text-3xl text-primary">{formatSYP(effectivePrice)}</span>
-                  {product.sale_enabled && product.sale_price_syp && (
-                    <span className="font-tajawal text-sm text-elite-muted line-through opacity-60">
-                      {formatSYP(product.price_syp)}
+            {/* Price section - Premium Style */}
+            <div className="flex flex-col gap-4 pb-6 border-b border-elite-border/10">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-tajawal font-black text-elite-muted uppercase tracking-widest opacity-70">السعر الحالي</span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-cairo font-black text-4xl text-primary">{formatSYP(effectivePrice).split(' ')[0]}</span>
+                      <span className="font-tajawal font-bold text-sm text-primary opacity-80">ل.س</span>
+                    </div>
+                    
+                    {/* USD Price Tag */}
+                    <div className="bg-elite-border/30 px-3 py-1.5 rounded-xl flex items-center gap-1.5 border border-white/50 shadow-sm">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+                      <span className="font-tajawal font-black text-[13px] text-elite-text">
+                        {((effectivePrice) / (settings.exchange_rate_syp || 15000)).toFixed(2)} $
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 mt-1">
+                    {product.sale_enabled && product.sale_price_syp && (
+                      <div className="flex items-center gap-2">
+                        <span className="font-tajawal text-sm text-elite-muted line-through opacity-50 decoration-red-500/30">
+                          {formatSYP(product.price_syp)}
+                        </span>
+                        {discountPct > 0 && (
+                          <span className="bg-red-50 text-red-600 text-[10px] font-black px-2 py-0.5 rounded-lg border border-red-100">
+                            خصم {discountPct}%
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-end gap-2">
+                  {inStock ? (
+                    <div className="flex flex-col items-end">
+                      <span className="text-[11px] font-tajawal font-black text-green-600 bg-green-50 px-3 py-1.5 rounded-full border border-green-100 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                        متوفر للتسليم
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-[11px] font-tajawal font-black text-red-600 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">
+                      غير متوفر حالياً
                     </span>
                   )}
                 </div>
-                {product.sale_enabled && discountPct > 0 && (
-                  <span className="text-[10px] font-tajawal font-bold text-red-500">خصم {discountPct}% لفترة محدودة</span>
-                )}
               </div>
-
-              {inStock ? (
-                <span className="text-[11px] font-tajawal font-black text-green-600 bg-green-50 px-3 py-1.5 rounded-full border border-green-100 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  موجود حالياً
-                </span>
-              ) : (
-                <span className="text-[11px] font-tajawal font-black text-red-600 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">
-                  غير متوفر
-                </span>
-              )}
             </div>
 
             {/* Description - Foldable or compact */}

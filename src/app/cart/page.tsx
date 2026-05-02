@@ -3,18 +3,21 @@ import { ShoppingCart, Trash2, Plus, Minus, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
-import { formatSYP } from '@/lib/utils';
+import { formatSYP, formatUSD } from '@/lib/utils';
+import { useSettings } from '@/hooks/useSettings';
 import Button from '@/components/ui/Button';
 import EmptyState from '@/components/ui/EmptyState';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 
 export default function CartPage() {
+  const { settings } = useSettings();
   const items = useCartStore((s) => s.items);
   const removeItem = useCartStore((s) => s.removeItem);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const subtotal = useCartStore((s) => s.subtotal);
 
   const total = subtotal();
+  const exchangeRate = settings.exchange_rate_syp || 15000;
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
@@ -106,9 +109,14 @@ export default function CartPage() {
                         {item.variant_label}
                       </p>
                     )}
-                    <p className="font-tajawal text-sm font-bold text-elite-text">
-                      {formatSYP(item.price_syp)}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-tajawal text-sm font-bold text-elite-text">
+                        {formatSYP(item.price_syp)}
+                      </p>
+                      <span className="text-[10px] text-elite-muted bg-surface-dim px-1.5 py-0.5 rounded border border-elite-border/50">
+                        {formatUSD(item.price_syp, exchangeRate)}
+                      </span>
+                    </div>
                     {item.governorate && (
                       <div className="flex items-center gap-1 mt-1.5 bg-primary/5 px-2 py-0.5 rounded-lg w-fit">
                         <MapPin className="w-3 h-3 text-primary" />
@@ -152,9 +160,14 @@ export default function CartPage() {
                     </div>
 
                     {/* Line total */}
-                    <p className="font-tajawal text-xs font-semibold text-primary">
-                      {formatSYP(item.price_syp * item.quantity)}
-                    </p>
+                    <div className="flex flex-col items-end">
+                      <p className="font-tajawal text-xs font-semibold text-primary">
+                        {formatSYP(item.price_syp * item.quantity)}
+                      </p>
+                      <span className="text-[9px] text-elite-muted">
+                        {formatUSD(item.price_syp * item.quantity, exchangeRate)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -178,9 +191,14 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-1">
-                  <span className="font-cairo font-bold text-base text-elite-text">الإجمالي</span>
-                  <span className="font-cairo font-black text-lg text-primary">{formatSYP(total)}</span>
+                <div className="flex flex-col items-end pt-1">
+                  <div className="flex items-center justify-between w-full">
+                    <span className="font-cairo font-bold text-base text-elite-text">الإجمالي</span>
+                    <span className="font-cairo font-black text-lg text-primary">{formatSYP(total)}</span>
+                  </div>
+                  <span className="font-tajawal text-xs font-bold text-elite-muted bg-surface-dim px-2 py-0.5 rounded-lg border border-elite-border/50 mt-1">
+                    {formatUSD(total, exchangeRate)}
+                  </span>
                 </div>
 
                 <p className="font-tajawal text-xs text-elite-muted">

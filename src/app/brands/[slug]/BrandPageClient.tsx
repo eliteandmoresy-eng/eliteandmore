@@ -74,70 +74,88 @@ export default function BrandPageClient({ brand, categories }: BrandPageClientPr
 
       {/* ── Main content area ── */}
       <div className="max-w-7xl mx-auto px-4 pt-10 relative z-20">
-        
-        {/* Focused Brand Dashboard - Centered & Integrated */}
-        <div className="max-w-4xl mx-auto mb-12 animate-fade-up">
-          <div className="bg-white/80 backdrop-blur-md rounded-[3.5rem] p-8 md:p-14 border border-elite-border shadow-2xl shadow-black/[0.03] flex flex-col items-center text-center relative overflow-hidden z-0">
+        {/* Premium Brand Hero Section */}
+        <div className="mb-12 animate-fade-up">
+          <div className="relative rounded-[3rem] overflow-hidden border border-elite-border shadow-2xl min-h-[300px] md:min-h-[450px] flex items-end">
             
-            {/* Brand Cover Background */}
-            {brand.cover_url && (
-              <div className="absolute inset-0 z-[-1]">
+            {/* Main Cover Image */}
+            <div className="absolute inset-0 z-0">
+              {brand.cover_url ? (
                 <Image
                   src={brand.cover_url}
                   alt={`${brand.name} cover`}
                   fill
-                  className="object-cover opacity-30"
+                  className="object-cover transition-transform duration-1000 hover:scale-105"
                   priority
-                  sizes="(max-width: 1024px) 100vw, 1024px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-transparent" />
-              </div>
-            )}
-
-            {/* Logo (Integrated) */}
-            <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden bg-white border border-elite-border p-3 mb-8 shadow-lg group hover:scale-105 transition-transform duration-500">
-              <Image src={brand.logo_url} alt={brand.name} fill className="object-contain" sizes="128px" priority />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-dark to-black" />
+              )}
+              {/* Gradient Overlay for Text Readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
             </div>
 
-            {/* Brand Identity */}
-            <h1 className="font-cairo font-black text-4xl md:text-6xl text-elite-text mb-4">{brand.name}</h1>
-            {brand.description && (
-              <p className="font-tajawal text-sm md:text-lg text-elite-muted max-w-2xl leading-relaxed mb-10">
-                {brand.description}
-              </p>
-            )}
+            {/* Brand Info Overlay */}
+            <div className="relative z-10 w-full p-6 md:p-12 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-10">
+              {/* Logo */}
+              <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-3xl overflow-hidden bg-white border-4 border-white/20 p-4 shadow-2xl flex-shrink-0 group hover:scale-110 transition-all duration-500">
+                <Image src={brand.logo_url} alt={brand.name} fill className="object-contain p-2" sizes="160px" priority />
+              </div>
 
-            {/* Categories (Integrated & Centered) */}
-            {showTabs && (
-              <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+              {/* Text Content */}
+              <div className="flex-1 text-center md:text-start space-y-3 pb-2">
+                <div className="flex flex-col gap-1">
+                   <span className="text-gold font-tajawal font-black text-xs md:text-sm uppercase tracking-[0.2em]">براند أصلي</span>
+                   <h1 className="font-cairo font-black text-4xl md:text-7xl text-white tracking-tight">{brand.name}</h1>
+                </div>
+                {brand.description && (
+                  <p className="font-tajawal text-sm md:text-lg text-white/80 max-w-2xl leading-relaxed line-clamp-3">
+                    {brand.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Categories Navigation - Now outside but styled with the hero */}
+          {showTabs && (
+            <div className="mt-8 flex flex-col items-center gap-6">
+              <div className="flex items-center gap-4 w-full max-w-xs">
+                <div className="h-px bg-elite-border/30 flex-1" />
+                <span className="text-[10px] font-tajawal font-black text-primary uppercase tracking-widest whitespace-nowrap">تصفح الأقسام</span>
+                <div className="h-px bg-elite-border/30 flex-1" />
+              </div>
+              
+              <div className="flex flex-wrap justify-center gap-2.5 md:gap-3.5">
                 <button
                   onClick={() => { setActiveCategory('all'); setPage(1); }}
                   className={cn(
-                    'px-6 py-3.5 md:px-9 md:py-4 rounded-2xl font-tajawal text-sm font-bold transition-all border shadow-sm',
+                    'px-8 py-3.5 rounded-2xl font-tajawal text-sm font-black transition-all border shadow-sm',
                     activeCategory === 'all'
-                      ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105'
-                      : 'bg-white border-elite-border text-elite-text hover:border-primary/40'
+                      ? 'bg-primary text-white border-primary shadow-xl shadow-primary/20 scale-105'
+                      : 'bg-white border-elite-border text-elite-text hover:border-primary/40 hover:bg-white/80'
                   )}
                 >
-                  جميع الأقسام
+                  الكل
                 </button>
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => { setActiveCategory(cat.id); setPage(1); }}
                     className={cn(
-                      'px-6 py-3.5 md:px-9 md:py-4 rounded-2xl font-tajawal text-sm font-bold transition-all border shadow-sm',
+                      'px-8 py-3.5 rounded-2xl font-tajawal text-sm font-black transition-all border shadow-sm',
                       activeCategory === cat.id
-                        ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105'
-                        : 'bg-white border-elite-border text-elite-text hover:border-primary/40'
+                        ? 'bg-primary text-white border-primary shadow-xl shadow-primary/20 scale-105'
+                        : 'bg-white border-elite-border text-elite-text hover:border-primary/40 hover:bg-white/80'
                     )}
                   >
                     {cat.name}
                   </button>
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* ── Search + Filter bar ── */}

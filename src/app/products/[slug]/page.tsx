@@ -2,16 +2,24 @@ import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import { Product } from '@/types';
 import ProductPageClient from './ProductPageClient';
+import { getAuthSession } from '@/lib/getSession';
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const decodedSlug = decodeURIComponent(params.slug);
+  const variations = Array.from(new Set([
+    params.slug,
+    decodedSlug,
+    decodedSlug.replace(/-/g, ' '),
+    decodedSlug.replace(/\s+/g, '-')
+  ])).map(v => `slug.eq."${v}"`).join(',');
+
   const { data } = await supabase
     .from('products')
     .select('name, description')
-    .or(`slug.eq."${params.slug}",slug.eq."${decodedSlug}"`)
+    .or(variations)
     .single();
   return {
     title: data ? `${data.name} — Elite and More` : 'Elite and More',
@@ -21,8 +29,26 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
   const decodedSlug = decodeURIComponent(params.slug);
+  const session = await getAuthSession();
+  const isAdmin = !!session;
 
-  const baseQuery = supabase
+  // Build a highly resilient filter
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.slug);
+  
+  const filters = [
+    `slug.eq."${params.slug}"`,
+    `slug.eq."${decodedSlug}"`,
+    `slug.eq."${decodedSlug.replace(/-/g, ' ')}"`,
+    `slug.eq."${decodedSlug.replace(/\s+/g, '-')}"`
+  ];
+
+  if (isUuid) {
+    filters.push(`id.eq."${params.slug}"`);
+  }
+
+  const variations = Array.from(new Set(filters)).join(',');
+
+  let query = supabase
     .from('products')
     .select(`
       *,
@@ -33,12 +59,8 @@ export default async function ProductPage({ params }: { params: { slug: string }
       tags:product_tags(tag:tags(*)),
       governorates:product_governorates(*, governorate:governorates(*))
     `)
-    .or(`slug.eq."${params.slug}",slug.eq."${decodedSlug}"`);
+    .or(variations);
 
-  const { data: session } = await supabase.auth.getSession();
-  const isAdmin = !!session?.session;
-
-  let query = baseQuery;
   if (!isAdmin) {
     query = query.eq('is_active', true);
   }
