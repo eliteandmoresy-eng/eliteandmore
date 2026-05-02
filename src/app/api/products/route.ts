@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, supabaseAdmin } from '@/lib/supabase';
 import { getAuthSession } from '@/lib/getSession';
+import { generateSlug } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -175,11 +176,25 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { images, variants, tag_ids, governorates: govs, ...productData } = body;
 
-    // Ensure slug exists
-    if (!productData.slug && productData.name) {
-      const { generateSlug } = await import('@/lib/utils');
+    // Always ensure slug exists
+    if (!productData.slug || productData.slug.trim().length < 2) {
       productData.slug = generateSlug(productData.name);
     }
+
+    // Check for duplicate slugs and make unique
+    let slugCounter = 0;
+    let finalSlug = productData.slug;
+    while (true) {
+      const { data: existing } = await supabaseAdmin
+        .from('products')
+        .select('id')
+        .eq('slug', finalSlug)
+        .single();
+      if (!existing) break;
+      slugCounter++;
+      finalSlug = `${productData.slug}-${slugCounter}`;
+    }
+    productData.slug = finalSlug;
 
     // Insert product
     const { data: product, error } = await supabaseAdmin

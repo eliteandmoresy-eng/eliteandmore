@@ -113,7 +113,7 @@ export default function EditProductPage() {
           brand_id: p.brand_id,
           category_id: p.category_id ?? null,
           name: p.name,
-          slug: p.slug,
+          slug: p.slug || generateSlug(p.name),
           description: p.description ?? '',
           price_syp: p.price_syp,
           sale_enabled: p.sale_enabled,

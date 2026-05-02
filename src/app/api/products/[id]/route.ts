@@ -58,11 +58,27 @@ export async function PUT(
     const body = await request.json();
     const { images, variants, tag_ids, governorates: govs, ...productData } = body;
 
-    // Ensure slug exists
-    if (!productData.slug && productData.name) {
+    // Always ensure slug exists
+    if (!productData.slug || productData.slug.trim().length < 2) {
       const { generateSlug } = await import('@/lib/utils');
       productData.slug = generateSlug(productData.name);
     }
+
+    // Check for duplicate slugs (excluding current product)
+    let slugCounter = 0;
+    let finalSlug = productData.slug;
+    while (true) {
+      const { data: existing } = await supabaseAdmin
+        .from('products')
+        .select('id')
+        .eq('slug', finalSlug)
+        .neq('id', id)
+        .single();
+      if (!existing) break;
+      slugCounter++;
+      finalSlug = `${productData.slug}-${slugCounter}`;
+    }
+    productData.slug = finalSlug;
 
     // Update product
     const { data: product, error } = await supabaseAdmin
