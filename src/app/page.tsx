@@ -8,7 +8,8 @@ import TagSection from '@/components/home/TagSection';
 import BrandProductsSection from '@/components/home/BrandProductsSection';
 import ProductCard from '@/components/product/ProductCard';
 
-export const revalidate = 60;
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const [brandsResult, bannersResult, tagsResult] = await Promise.all([

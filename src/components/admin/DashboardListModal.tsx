@@ -81,13 +81,20 @@ export default function DashboardListModal({
                 key={item.id} 
                 className="flex items-center gap-4 p-3 rounded-2xl border border-transparent hover:border-lite-gold/20 hover:bg-surface-dim/50 transition-all group"
               >
-                <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-surface-dim flex-shrink-0 shadow-sm">
-                  <Image 
-                    src={item.logo_url || item.image_url || (item.images && item.images[0]?.url) || '/images/placeholder.png'} 
-                    alt={item.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
+                <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-surface-dim flex-shrink-0 shadow-sm flex items-center justify-center border border-lite-gold/5">
+                  {item.logo_url || item.image_url || (item.images && item.images[0]?.url) ? (
+                    <Image 
+                      src={item.logo_url || item.image_url || (item.images && item.images[0]?.url)} 
+                      alt={item.name}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center p-1 text-center">
+                      <Icon className="w-4 h-4 text-elite-muted/40 mb-0.5" />
+                      <span className="text-[8px] font-bold text-elite-muted/40 leading-tight">لا توجد صورة</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-elite-text font-tajawal truncate">{item.name}</p>

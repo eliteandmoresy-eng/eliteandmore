@@ -1,5 +1,8 @@
 import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
+
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 import { Product } from '@/types';
 import ProductPageClient from './ProductPageClient';
 
