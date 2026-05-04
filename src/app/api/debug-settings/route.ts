@@ -1,5 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     // 1. Try to add columns if they don't exist

@@ -72,6 +72,7 @@ export interface ProductVariant {
   name: string;
   value: string | null;
   price_syp: number | null;
+  price_usd: number | null;
   sort_order: number;
 }
 
@@ -101,8 +102,10 @@ export interface Product {
   slug: string;
   description: string | null;
   price_syp: number;
+  price_usd: number;
   sale_enabled: boolean;
   sale_price_syp: number | null;
+  sale_price_usd: number | null;
   stock_status: 'in_stock' | 'out_of_stock';
   is_featured: boolean;
   is_active: boolean;
@@ -145,6 +148,7 @@ export interface CartItem {
   brand_slug: string;
   image: string;
   price_syp: number;
+  price_usd: number;
   quantity: number;
   variant_label?: string;
   governorate?: string;

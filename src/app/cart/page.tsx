@@ -114,7 +114,7 @@ export default function CartPage() {
                         {formatSYP(item.price_syp)}
                       </p>
                       <span className="text-[10px] text-elite-muted bg-surface-dim px-1.5 py-0.5 rounded border border-elite-border/50">
-                        {formatUSD(item.price_syp, exchangeRate)}
+                        {item.price_usd.toFixed(2)} $
                       </span>
                     </div>
                     {item.governorate && (
@@ -165,7 +165,7 @@ export default function CartPage() {
                         {formatSYP(item.price_syp * item.quantity)}
                       </p>
                       <span className="text-[9px] text-elite-muted">
-                        {formatUSD(item.price_syp * item.quantity, exchangeRate)}
+                        {(item.price_usd * item.quantity).toFixed(2)} $
                       </span>
                     </div>
                   </div>

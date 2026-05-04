@@ -62,8 +62,10 @@ export default function NewProductPage() {
       name: '',
       slug: '',
       description: '',
+      price_usd: 0,
       price_syp: 0,
       sale_enabled: false,
+      sale_price_usd: null,
       sale_price_syp: null,
       stock_status: 'in_stock',
       is_featured: false,
@@ -74,7 +76,8 @@ export default function NewProductPage() {
 
   const brandId = watch('brand_id');
   const saleEnabled = watch('sale_enabled');
-  const priceValue = watch('price_syp');
+  const priceUSD = watch('price_usd');
+  const salePriceUSD = watch('sale_price_usd');
 
   useEffect(() => {
     fetch('/api/brands?all=true')
@@ -108,6 +111,21 @@ export default function NewProductPage() {
     setValue('name', val);
     setValue('slug', generateSlug(val));
   };
+
+  // Auto-calculate SYP based on USD and exchange rate
+  useEffect(() => {
+    const rate = settings.exchange_rate_syp || 15000;
+    setValue('price_syp', Math.round(priceUSD * rate));
+  }, [priceUSD, settings.exchange_rate_syp, setValue]);
+
+  useEffect(() => {
+    const rate = settings.exchange_rate_syp || 15000;
+    if (salePriceUSD) {
+      setValue('sale_price_syp', Math.round(salePriceUSD * rate));
+    } else {
+      setValue('sale_price_syp', null);
+    }
+  }, [salePriceUSD, settings.exchange_rate_syp, setValue]);
 
   const onSubmit = async (data: ProductFormData) => {
     try {
@@ -253,19 +271,20 @@ export default function NewProductPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
              <div className="space-y-4">
                 <Input
-                  label="السعر الأصلي (ل.س)"
+                  label="السعر الأساسي ($)"
                   required
                   type="number"
-                  error={errors.price_syp?.message}
-                  {...register('price_syp', { valueAsNumber: true })}
+                  step="0.01"
+                  error={errors.price_usd?.message}
+                  {...register('price_usd', { valueAsNumber: true })}
                   className="bg-surface-dim/40 border-none rounded-2xl text-lg font-black text-primary"
                 />
 
-                {priceValue > 0 && settings.exchange_rate_syp && (
+                {priceUSD > 0 && settings.exchange_rate_syp && (
                   <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-xl border border-primary/10">
                     <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                     <span className="text-xs font-bold text-elite-muted">
-                      يعادل تقريباً: <span className="text-primary">{formatUSD(priceValue, settings.exchange_rate_syp)}</span>
+                      سيظهر في الموقع: <span className="text-primary">{new Intl.NumberFormat('ar-SY').format(Math.round(priceUSD * settings.exchange_rate_syp))} ل.س</span>
                     </span>
                   </div>
                 )}
@@ -289,13 +308,19 @@ export default function NewProductPage() {
                 {saleEnabled && (
                   <div className="pt-2 animate-in fade-in slide-in-from-top-1">
                     <Input
-                      label="سعر العرض (ل.س)"
+                      label="سعر العرض ($)"
                       type="number"
-                      placeholder="خصم..."
-                      error={errors.sale_price_syp?.message}
-                      {...register('sale_price_syp', { valueAsNumber: true })}
+                      step="0.01"
+                      placeholder="خصم بالدولار..."
+                      error={errors.sale_price_usd?.message}
+                      {...register('sale_price_usd', { valueAsNumber: true })}
                       className="bg-white border-gold/30 rounded-2xl text-lg font-black text-gold"
                     />
+                    {salePriceUSD && salePriceUSD > 0 && settings.exchange_rate_syp && (
+                      <p className="text-[10px] text-gold font-bold mt-1 px-2">
+                        سيظهر: {new Intl.NumberFormat('ar-SY').format(Math.round(salePriceUSD * settings.exchange_rate_syp))} ل.س
+                      </p>
+                    )}
                   </div>
                 )}
              </div>

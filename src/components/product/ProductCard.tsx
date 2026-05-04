@@ -33,7 +33,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       brand_name: product.brand?.name ?? '',
       brand_slug: product.brand?.slug ?? '',
       image: imageUrl,
-      price_syp: product.sale_enabled && product.sale_price_syp ? product.sale_price_syp : product.price_syp,
+      price_syp: product.sale_enabled && product.sale_price_usd ? product.sale_price_usd * (settings.exchange_rate_syp ?? 15000) : product.price_usd * (settings.exchange_rate_syp ?? 15000),
+      price_usd: product.sale_enabled && product.sale_price_usd ? product.sale_price_usd : product.price_usd,
       quantity: 1,
     });
     toast.success('تمت إضافة المنتج إلى السلة');
@@ -65,7 +66,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Promotion badges - Top Right */}
         <div className="absolute top-2 end-2 flex flex-col gap-1 items-end z-10">
-          {product.sale_enabled && product.sale_price_syp && (
+          {product.sale_enabled && product.sale_price_usd && (
             <div className="bg-gold text-primary-dark text-[10px] font-black px-2 py-0.5 rounded-lg shadow-sm">
               وفر
             </div>
@@ -102,8 +103,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <div className="mt-auto pt-1 flex flex-col gap-2">
           <PriceDisplay
-            priceSYP={product.price_syp}
-            salePriceSYP={product.sale_price_syp}
+            priceUSD={product.price_usd}
+            salePriceUSD={product.sale_price_usd}
             saleEnabled={product.sale_enabled}
             exchangeRate={settings.exchange_rate_syp ?? 15000}
             size="sm"
