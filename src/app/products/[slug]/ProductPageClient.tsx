@@ -58,13 +58,16 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
   const selectedVariant: ProductVariant | undefined = product.variants?.find(
     (v) => v.id === selectedVariantId
   );
-  const effectivePrice =
-    selectedVariant?.price_syp ??
-    (product.sale_enabled && product.sale_price_syp ? product.sale_price_syp : product.price_syp);
+  const effectivePriceUSD =
+    selectedVariant?.price_usd ??
+    (product.sale_enabled && product.sale_price_usd ? product.sale_price_usd : product.price_usd);
+  
+  const exchangeRate = settings.exchange_rate_syp || 15000;
+  const effectivePriceSYP = effectivePriceUSD * exchangeRate;
 
   const discountPct =
-    product.sale_enabled && product.sale_price_syp && product.price_syp
-      ? Math.round((1 - product.sale_price_syp / product.price_syp) * 100)
+    product.sale_enabled && product.sale_price_usd && product.price_usd
+      ? Math.round((1 - product.sale_price_usd / product.price_usd) * 100)
       : 0;
 
   // Process governorates availability
@@ -94,7 +97,8 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
         brand_name: product.brand?.name ?? '',
         brand_slug: product.brand?.slug ?? '',
         image: imageUrl,
-        price_syp: effectivePrice,
+        price_syp: effectivePriceSYP,
+        price_usd: effectivePriceUSD,
         quantity,
         variant_label: selectedVariant?.name ?? undefined,
         governorate: selectedGov || undefined,
@@ -115,7 +119,7 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
       setShowAvailability(true);
       return;
     }
-    const subtotal = effectivePrice * quantity;
+    const subtotal = effectivePriceSYP * quantity;
     const message = buildOrderMessage({
       items: [{
         id: `${product.id}_${selectedVariantId ?? 'base'}`,
@@ -126,7 +130,8 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
         brand_name: product.brand?.name ?? '',
         brand_slug: product.brand?.slug ?? '',
         image: imageUrl,
-        price_syp: effectivePrice,
+        price_syp: effectivePriceSYP,
+        price_usd: effectivePriceUSD,
         quantity,
         variant_label: selectedVariant?.name ?? undefined,
       }],
@@ -134,7 +139,9 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
         full_name: '', phone: '', governorate_id: '',
         governorate_name: selectedGov || 'غير محدد', address: '', notes: '', payment_method: 'cod',
       },
-      subtotal, shippingCost: 0, total: subtotal,
+      subtotal: effectivePriceSYP * quantity, 
+      shippingCost: 0, 
+      total: effectivePriceSYP * quantity,
       exchangeRate: settings.exchange_rate_syp ?? 15000,
       freeShipping: false,
     });
@@ -232,7 +239,7 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
                   <span className="text-[10px] font-tajawal font-black text-elite-muted uppercase tracking-widest opacity-70">السعر الحالي</span>
                   <div className="flex items-center gap-3">
                     <div className="flex items-baseline gap-1.5">
-                      <span className="font-cairo font-black text-4xl text-primary">{formatSYP(effectivePrice).split(' ')[0]}</span>
+                      <span className="font-cairo font-black text-4xl text-primary">{formatSYP(effectivePriceSYP).split(' ')[0]}</span>
                       <span className="font-tajawal font-bold text-sm text-primary opacity-80">ل.س</span>
                     </div>
                     
@@ -240,16 +247,16 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
                     <div className="bg-elite-border/30 px-3 py-1.5 rounded-xl flex items-center gap-1.5 border border-white/50 shadow-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
                       <span className="font-tajawal font-black text-[13px] text-elite-text">
-                        {((effectivePrice) / (settings.exchange_rate_syp || 15000)).toFixed(2)} $
+                        {effectivePriceUSD.toFixed(2)} $
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3 mt-1">
-                    {product.sale_enabled && product.sale_price_syp && (
+                    {product.sale_enabled && product.sale_price_usd && (
                       <div className="flex items-center gap-2">
                         <span className="font-tajawal text-sm text-elite-muted line-through opacity-50 decoration-red-500/30">
-                          {formatSYP(product.price_syp)}
+                          {formatSYP(product.price_usd * exchangeRate)}
                         </span>
                         {discountPct > 0 && (
                           <span className="bg-red-50 text-red-600 text-[10px] font-black px-2 py-0.5 rounded-lg border border-red-100">

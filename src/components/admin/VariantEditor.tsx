@@ -30,6 +30,7 @@ export default function VariantEditor({ variants, onChange }: VariantEditorProps
       name: '',
       value: null,
       price_syp: null,
+      price_usd: null,
       sort_order: variants.length,
     };
     onChange([...variants, newVariant]);
@@ -54,7 +55,7 @@ export default function VariantEditor({ variants, onChange }: VariantEditorProps
                 <th className="text-start p-3 text-elite-muted font-semibold">النوع</th>
                 <th className="text-start p-3 text-elite-muted font-semibold">الاسم</th>
                 <th className="text-start p-3 text-elite-muted font-semibold">القيمة</th>
-                <th className="text-start p-3 text-elite-muted font-semibold">السعر الخاص</th>
+                <th className="text-start p-3 text-elite-muted font-semibold">السعر الخاص ($)</th>
                 <th className="p-3" />
               </tr>
             </thead>
@@ -107,11 +108,12 @@ export default function VariantEditor({ variants, onChange }: VariantEditorProps
                   <td className="p-2">
                     <input
                       type="number"
-                      value={variant.price_syp ?? ''}
+                      step="0.01"
+                      value={variant.price_usd ?? ''}
                       onChange={(e) =>
-                        updateVariant(i, { price_syp: e.target.value ? Number(e.target.value) : null })
+                        updateVariant(i, { price_usd: e.target.value ? Number(e.target.value) : null })
                       }
-                      placeholder="اختياري"
+                      placeholder="اختياري ($)"
                       min={0}
                       className="w-full px-2 py-1.5 rounded-lg border border-elite-border text-elite-text text-sm focus:outline-none focus:border-primary"
                     />

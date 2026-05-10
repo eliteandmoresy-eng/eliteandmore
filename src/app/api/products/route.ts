@@ -221,12 +221,13 @@ export async function POST(request: NextRequest) {
     // Insert variants
     if (variants?.length) {
       await supabaseAdmin.from('product_variants').insert(
-        variants.map((v: { variant_type: string; name: string; value?: string; price_syp?: number; sort_order?: number }, i: number) => ({
+        variants.map((v: { variant_type: string; name: string; value?: string; price_syp?: number; price_usd?: number; sort_order?: number }, i: number) => ({
           product_id: product.id,
           variant_type: v.variant_type,
           name: v.name,
           value: v.value ?? null,
           price_syp: v.price_syp ?? null,
+          price_usd: v.price_usd ?? null,
           sort_order: v.sort_order ?? i,
         }))
       );
