@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Logo from '@/components/ui/Logo';
-import { Phone, MapPin, Clock, Facebook, Instagram, MessageCircle, Home, ShoppingBag, Info, Heart, ShoppingCart, Grid3X3 } from 'lucide-react';
+import { Phone, MapPin, Clock, Facebook, Instagram, MessageCircle, Home, ShoppingBag, Info, Heart, ShoppingCart, Grid3X3, Briefcase } from 'lucide-react';
 import { useSettings } from '@/hooks/useSettings';
 import {
   WHATSAPP_NUMBER,
@@ -47,6 +47,7 @@ export default function Footer() {
                 { href: '/shop', label: 'المتجر', icon: ShoppingBag },
                 { href: '/brands', label: 'البرندات', icon: Grid3X3 },
                 { href: '/about', label: 'من نحن', icon: Info },
+                { href: '/careers', label: 'طلب توظيف', icon: Briefcase },
                 { href: '/favorites', label: 'المفضلة', icon: Heart },
                 { href: '/cart', label: 'السلة', icon: ShoppingCart },
               ].map((link) => (

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, ShoppingCart, Heart, Menu, ChevronDown, X, Package, Home, Tag, Info, LayoutGrid } from 'lucide-react';
+import { Search, ShoppingCart, Heart, Menu, ChevronDown, X, Package, Home, Tag, Info, LayoutGrid, Briefcase } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { useFavoritesStore } from '@/store/favoritesStore';
 import Logo from '@/components/ui/Logo';
@@ -146,6 +146,18 @@ export default function Header() {
                 <Package className="w-4 h-4" />
                 كل المنتجات
                 {isActive('/shop') && <span className="absolute bottom-1 right-1/2 translate-x-1/2 w-4 h-0.5 bg-gold rounded-full" />}
+              </Link>
+
+              <Link
+                href="/careers"
+                className={cn(
+                  'relative px-4 py-2 text-sm font-tajawal font-semibold rounded-xl transition-colors whitespace-nowrap flex items-center gap-1.5',
+                  isActive('/careers') ? 'text-white bg-white/20' : 'text-white/80 hover:text-white hover:bg-white/10'
+                )}
+              >
+                <Briefcase className="w-4 h-4" />
+                طلب توظيف
+                {isActive('/careers') && <span className="absolute bottom-1 right-1/2 translate-x-1/2 w-4 h-0.5 bg-gold rounded-full" />}
               </Link>
 
               <div className="relative" ref={brandsRef}>

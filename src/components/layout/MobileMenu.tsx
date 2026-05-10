@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { X, Home, Package, Layers, Info, Heart, ShoppingCart, ChevronLeft } from 'lucide-react';
+import { X, Home, Package, Layers, Info, Heart, ShoppingCart, ChevronLeft, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Logo from '@/components/ui/Logo';
 import { Brand } from '@/types';
@@ -74,6 +74,18 @@ export default function MobileMenu({ open, onClose, brands }: MobileMenuProps) {
           >
             <Package className="w-5 h-5 flex-shrink-0" />
             كل المنتجات
+          </Link>
+
+          {/* طلب توظيف */}
+          <Link
+            href="/careers"
+            className={cn(
+              'flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-tajawal font-bold transition-all',
+              isActive('/careers') ? 'bg-white text-primary shadow-lg shadow-white/10' : 'text-white/80 hover:bg-white/10 hover:text-white'
+            )}
+          >
+            <Briefcase className="w-5 h-5 flex-shrink-0" />
+            طلب توظيف
           </Link>
 
           {/* المفضلة */}
