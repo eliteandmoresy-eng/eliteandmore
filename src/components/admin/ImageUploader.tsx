@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, X, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
-import { cn } from '@/lib/utils';
+import { cn, compressImage } from '@/lib/utils';
 
 interface ImageUploaderProps {
   images: string[];
@@ -35,8 +35,9 @@ export default function ImageUploader({
       const newImages: string[] = [];
 
       for (const file of files) {
+        const compressedFile = await compressImage(file);
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', compressedFile, file.name);
         formData.append('folder', folder);
 
         try {

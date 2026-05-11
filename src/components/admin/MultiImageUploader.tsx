@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { X, Star, Plus, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { cn } from '@/lib/utils';
+import { cn, compressImage } from '@/lib/utils';
 
 interface UploadedImage {
   url: string;
@@ -40,8 +40,9 @@ export default function MultiImageUploader({
     const newImages: UploadedImage[] = [];
 
     for (const file of toUpload) {
+      const compressedFile = await compressImage(file);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', compressedFile, file.name);
       formData.append('folder', 'products');
 
       try {
