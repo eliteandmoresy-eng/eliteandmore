@@ -366,7 +366,7 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
                     )}
                     {unavailableGovs.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-[10px] font-tajawal font-black text-red-500 uppercase tracking-wider">غير متوفر في:</p>
+                        <p className="text-[10px] font-tajawal font-black text-red-500 uppercase tracking-wider">غير متوفر توصيل في هذه المحافظات:</p>
                         <div className="flex flex-wrap gap-2">
                           {unavailableGovs.map(name => (
                             <span key={name} className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-tajawal font-bold border border-red-100 opacity-70 cursor-not-allowed">

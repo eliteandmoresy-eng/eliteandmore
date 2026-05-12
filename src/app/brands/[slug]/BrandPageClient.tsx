@@ -62,6 +62,15 @@ export default function BrandPageClient({ brand, categories }: BrandPageClientPr
 
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
 
+  const isInitialPageMount = useRef(true);
+  useEffect(() => {
+    if (isInitialPageMount.current) {
+      isInitialPageMount.current = false;
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [page]);
+
   const showTabs = brand.has_categories && categories.length > 0;
   const hasActiveFilters = search || governorate || activeCategory !== 'all';
 

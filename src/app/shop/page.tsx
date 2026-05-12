@@ -102,6 +102,15 @@ export default function ShopPage() {
     fetchProducts();
   }, [fetchProducts]);
 
+  const isInitialPageMount = useRef(true);
+  useEffect(() => {
+    if (isInitialPageMount.current) {
+      isInitialPageMount.current = false;
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [page]);
+
   const toggleBrand = (slug: string) => {
     setSelectedBrands((prev) =>
       prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
